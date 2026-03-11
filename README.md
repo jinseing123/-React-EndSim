@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
   # Character Selection Interface
 
@@ -9,3 +10,6 @@
 
   Run `npm run dev` to start the development server.
   
+=======
+# -React-EndSim
+>>>>>>> 30eac83b9b77a0a7e223e9e6e9d687d0f688033c
