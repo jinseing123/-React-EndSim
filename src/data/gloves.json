@@ -1,0 +1,50 @@
+[
+  {
+    "id": "glove-1",
+    "name": "식양 글러브",
+    "image": "/images/equipment/shikyang_glove.png",
+    "stats": [
+      {
+        "type": "STR",
+        "label": "힘",
+        "values": [8.5, 10.2, 12.5, 15.0]
+      },
+      {
+        "type": "DEX",
+        "label": "민첩",
+        "values": [12.3, 14.5, 17.0, 20.2]
+      }
+    ],
+    "options": [
+      {
+        "type": "SKILL_BONUS",
+        "label": "배틀스킬 피해 보너스",
+        "values": [7.2, 8.5, 10.0, 12.5]
+      }
+    ]
+  },
+  {
+    "id": "glove-2",
+    "name": "암살자의 장갑",
+    "image": "/images/equipment/assassin_glove.png",
+    "stats": [
+      {
+        "type": "DEX",
+        "label": "민첩",
+        "values": [15.0, 18.0, 21.5, 25.0]
+      },
+      {
+        "type": "CRIT",
+        "label": "치명타",
+        "values": [3.0, 4.5, 6.0, 8.0]
+      }
+    ],
+    "options": [
+      {
+        "type": "CHAIN_DAMAGE",
+        "label": "연계스킬 피해 보너스",
+        "values": [6.0, 8.0, 10.0, 13.0]
+      }
+    ]
+  }
+]

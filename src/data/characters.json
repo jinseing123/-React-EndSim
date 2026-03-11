@@ -1,0 +1,128 @@
+[
+  {
+    "id": "kael",
+    "name": "카엘",
+    "image": "/images/characters/kael.png",
+    "stats": [
+      { "type": "HP", "label": "생명력", "values": [1500, 1800, 2100] },
+      { "type": "ATK", "label": "공격력", "values": [250, 300, 350] },
+      { "type": "STR", "label": "힘", "values": [45, 55, 65] },
+      { "type": "DEX", "label": "민첩", "values": [30, 35, 40] },
+      { "type": "INT", "label": "지능", "values": [10, 15, 20] },
+      { "type": "WIS", "label": "의지", "values": [20, 25, 30] }
+    ],
+    "skills": {
+      "normal": {
+        "type": "기본 공격",
+        "name": "연속 베기",
+        "image": "/images/skills/kael_normal.png",
+        "imbalance": 15,
+        "castTime": 0.5,
+        "description": "전방의 적을 빠르게 3번 벱니다.",
+        "extraInfo": "마지막 타격 시 적을 밀쳐냅니다.",
+        "spRecovery": 5,
+        "damagePct": [100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 160],
+        "cooldown": 0
+      },
+      "battle": {
+        "type": "배틀 스킬",
+        "name": "화염 일격",
+        "image": "/images/skills/kael_battle.png",
+        "imbalance": 45,
+        "castTime": 1.2,
+        "description": "검에 불꽃을 휘둘러 강력한 타격을 줍니다.",
+        "extraInfo": "피격 시 5초간 화상 부여",
+        "spRecovery": 0,
+        "damagePct": [400, 420, 440, 460, 480, 500, 520, 540, 560, 580, 600, 650],
+        "cooldown": 12
+      },
+      "chain": {
+        "type": "연계 스킬",
+        "name": "폭풍 연계",
+        "image": "/images/skills/kael_chain.png",
+        "imbalance": 80,
+        "castTime": 0,
+        "description": "공중에 뜬 적에게 추가 피해를 입힙니다.",
+        "extraInfo": "연계 성공 시 공격력 10% 증가",
+        "spRecovery": 10,
+        "damagePct": [500, 520, 540, 560, 580, 600, 620, 640, 660, 680, 700, 750],
+        "cooldown": 25
+      },
+      "ultimate": {
+        "type": "궁극기",
+        "name": "멸망의 성전",
+        "image": "/images/skills/kael_ult.png",
+        "imbalance": 200,
+        "castTime": 3.5,
+        "description": "주변의 모든 적을 섬멸합니다.",
+        "extraInfo": "시전 중 무적 상태",
+        "spRecovery": 0,
+        "damagePct": [1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2500],
+        "cooldown": 120
+      }
+    }
+  },
+  {
+    "id": "aria",
+    "name": "아리아",
+    "image": "/images/characters/aria.png",
+    "stats": [
+      { "type": "HP", "label": "생명력", "values": [1200, 1450, 1700] },
+      { "type": "ATK", "label": "공격력", "values": [300, 360, 420] },
+      { "type": "STR", "label": "힘", "values": [20, 25, 30] },
+      { "type": "DEX", "label": "민첩", "values": [50, 60, 70] },
+      { "type": "INT", "label": "지능", "values": [40, 50, 60] },
+      { "type": "WIS", "label": "의지", "values": [25, 30, 35] }
+    ],
+    "skills": {
+      "normal": {
+        "type": "기본 공격",
+        "name": "빠른 사격",
+        "image": "/images/skills/aria_normal.png",
+        "imbalance": 10,
+        "castTime": 0.3,
+        "description": "빠르게 화살을 발사합니다.",
+        "extraInfo": "거리에 따라 피해량 증가",
+        "spRecovery": 3,
+        "damagePct": [80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 140],
+        "cooldown": 0
+      },
+      "battle": {
+        "type": "배틀 스킬",
+        "name": "폭발 화살",
+        "image": "/images/skills/aria_battle.png",
+        "imbalance": 40,
+        "castTime": 1.0,
+        "description": "폭발하는 화살을 발사합니다.",
+        "extraInfo": "범위 피해",
+        "spRecovery": 0,
+        "damagePct": [350, 370, 390, 410, 430, 450, 470, 490, 510, 530, 550, 600],
+        "cooldown": 10
+      },
+      "chain": {
+        "type": "연계 스킬",
+        "name": "관통 사격",
+        "image": "/images/skills/aria_chain.png",
+        "imbalance": 70,
+        "castTime": 0,
+        "description": "모든 적을 관통하는 화살을 발사합니다.",
+        "extraInfo": "관통 시마다 피해 10% 증가",
+        "spRecovery": 8,
+        "damagePct": [450, 470, 490, 510, 530, 550, 570, 590, 610, 630, 650, 700],
+        "cooldown": 20
+      },
+      "ultimate": {
+        "type": "궁극기",
+        "name": "천공의 화살비",
+        "image": "/images/skills/aria_ult.png",
+        "imbalance": 180,
+        "castTime": 3.0,
+        "description": "하늘에서 무수한 화살이 떨어집니다.",
+        "extraInfo": "넓은 범위 공격",
+        "spRecovery": 0,
+        "damagePct": [900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2300],
+        "cooldown": 100
+      }
+    }
+  }
+]

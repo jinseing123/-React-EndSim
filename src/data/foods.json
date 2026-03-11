@@ -1,0 +1,29 @@
+[
+  {
+    "id": "food-1",
+    "name": "강력한 공격의 영약",
+    "image": "/images/consumables/atk_potion.png",
+    "effects": [
+      { "type": "ATK_UP", "label": "공격력 증가", "value": 50 },
+      { "type": "CRIT_UP", "label": "치명타 확률", "value": 15.5 }
+    ]
+  },
+  {
+    "id": "food-2",
+    "name": "스테이크",
+    "image": "/images/consumables/steak.png",
+    "effects": [
+      { "type": "ATK_PERCENT", "label": "공격력", "value": 15 },
+      { "type": "CRIT_DAMAGE", "label": "치명타 피해", "value": 20 }
+    ]
+  },
+  {
+    "id": "food-3",
+    "name": "방어 강화 물약",
+    "image": "/images/consumables/def_potion.png",
+    "effects": [
+      { "type": "DEF_UP", "label": "방어력 증가", "value": 80 },
+      { "type": "HP_REGEN", "label": "HP 재생", "value": 5 }
+    ]
+  }
+]
