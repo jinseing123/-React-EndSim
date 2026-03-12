@@ -7,12 +7,7 @@ interface OperatorData {
   operatorLevel: number;
   breakthrough: number;
   skillLevels: [number, number, number, number];
-  equipment: {
-    armor: string | null;
-    glove: string | null;
-    part1: string | null;
-    part2: string | null;
-  };
+  equipment: { armor: string | null; glove: string | null; part1: string | null; part2: string | null; };
   equipmentForge: {
     armor: { stat1: number; stat2: number; option: number };
     glove: { stat1: number; stat2: number; option: number };
@@ -26,33 +21,27 @@ interface OperatorData {
 
 interface MainOperatorSectionProps {
   operatorData: OperatorData;
-  onOpenModal: (type: string, target: string) => void; // 해석: onOpenModal은 함수타입으로, type과 target이라는 매개변수를 받음. type은 모달의 종류(예: 'character', 'weapon', 'equipment' 등)를 나타내는 문자열이고, target은 어떤 요소를 대상으로 하는지 나타내는 문자열입니다. 예를 들어, 'main-character', 'party1-weapon' 등.
+  onOpenModal: (type: string, target: string) => void;
 }
 
-// App에서 이 컴포넌트를 불러올때 <MainOperatorSection /> 으로 불러옴 <- 이게 export default function MainOperatorSection() { ... } 이 부분임. 
-// MainOperatorSection() 괄호안에 매개변수 { operatorData, onOpenModal }가 존재하므로 App에서 <MainOperatorSection operatorData={...} onOpenModal={...} /> 이렇게 props를 전달해줘야함.
-// MainOperatorSectionProps는 props의 타입을 정의한것임. operatorData는 OperatorData 타입, onOpenModal은 함수타입. MainOperatorSection 컴포넌트는 operatorData와 onOpenModal을 props로 받아서 사용함.
-// props는 여기서 MainOperatorSection 컴포넌트가 부모 컴포넌트(App)로부터 전달받는 데이터나 함수를 의미함. MainOperatorSection은 operatorData와 onOpenModal이라는 props를 받아서 내부에서 사용함.
 export default function MainOperatorSection({ operatorData, onOpenModal }: MainOperatorSectionProps) {
   const [imbalanceState, setImbalanceState] = useState(false);
   const [defenseBreak, setDefenseBreak] = useState(0);
   const [artsType, setArtsType] = useState(0);
   const [artsLevel, setArtsLevel] = useState(0);
 
-  const character = charactersData.find(c => c.id === operatorData.characterId) || charactersData[0]; //조건 만족시 c가 character에 할당, 만족하는게 없으면 charactersData[0] 할당
+  const character = charactersData.find(c => c.id === operatorData.characterId) || charactersData[0];
 
   const getStatValue = (type: string, level: number) => {
-    const stat = character.stats.find(s => s.type === type); // 1. 해당 타입(HP, ATK 등)을 찾음
-    return stat ? stat.values[level] : 0; // 2. 찾으면 해당 레벨의 값을 반환
+    const stat = character.stats.find(s => s.type === type);
+    return stat ? stat.values[level] : 0;
   };
 
-  // 1. HP와 ATK만 담은 배열 (오른쪽 위)
   const primaryStats = [
     { name: '생명력', value: getStatValue('HP', operatorData.operatorLevel), icon: '/images/icons/스탯/hp.png' },
     { name: '공격력', value: getStatValue('ATK', operatorData.operatorLevel), icon: '/images/icons/스탯/atk.png' },
   ];
 
-  // 2. 나머지 4대 스탯 (오른쪽 아래)
   const secondaryStats = [
     { name: '힘', value: getStatValue('STR', operatorData.operatorLevel), icon: '/images/icons/스탯/str.png' },
     { name: '민첩', value: getStatValue('DEX', operatorData.operatorLevel), icon: '/images/icons/스탯/dex.png' },
@@ -60,193 +49,158 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
     { name: '의지', value: getStatValue('WIS', operatorData.operatorLevel), icon: '/images/icons/스탯/wis.png' },
   ];
 
-  const skills = [
-    {
-      name: character.skills.normal.type,
-      damage: `${character.skills.normal.damagePct[operatorData.skillLevels[0] - 1]}%`,
-      icon: '🗡️'
-    },
-    {
-      name: character.skills.battle.type,
-      damage: `${character.skills.battle.damagePct[operatorData.skillLevels[1] - 1]}%`,
-      icon: '⚔️'
-    },
-    {
-      name: character.skills.chain.type,
-      damage: `${character.skills.chain.damagePct[operatorData.skillLevels[2] - 1]}%`,
-      icon: '🔗'
-    },
-    {
-      name: character.skills.ultimate.type,
-      damage: `${character.skills.ultimate.damagePct[operatorData.skillLevels[3] - 1]}%`,
-      icon: '💥'
-    },
-  ];
-
-  const artsTypeOptions = [
-    { value: 0, label: '🔥' },
-    { value: 1, label: '❄️' },
-    { value: 2, label: '⚡' },
-    { value: 3, label: '🌿' },
+  const skillCategories = [
+    { title: "일반 공격", icon: character.images.normal, levelIdx: 0, list: character.skills.normal },
+    { title: "배틀 스킬", icon: character.images.battle, levelIdx: 1, list: character.skills.battle },
+    { title: "연계 스킬", icon: character.images.combo, levelIdx: 2, list: character.skills.combo },
+    { title: "궁극기", icon: character.images.ultimate, levelIdx: 3, list: character.skills.ultimate }
   ];
 
   return (
     <div className="bg-zinc-900 bg-card border border-border rounded-lg p-6 space-y-6">
-      <h2>메인 오퍼레이터</h2>
+      <h2 className="text-xl font-bold">메인 오퍼레이터</h2>
 
-      <div className="bg-zinc-900 bg-card border border-border rounded-lg p-6 space-y-6">
-        <h2>메인 오퍼레이터</h2>
+      {/* 상단 이미지 및 스탯 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+        <div className="flex justify-center">
+          <button
+            onClick={() => onOpenModal('character', 'main')}
+            className="relative w-60 h-60 bg-secondary rounded-lg border border-border hover:border-primary transition-colors group overflow-hidden"
+          >
+            <div className="absolute inset-0 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">👤</div>
+            <div className="absolute bottom-2 left-2 right-2 bg-zinc-900/80 backdrop-blur-sm px-2 py-1 rounded text-sm text-center font-bold">
+              {character.name}
+            </div>
+          </button>
+        </div>
 
-        {/* 전체 레이아웃 컨테이너: md 이상에서 2컬럼 그리드로 1:1 비율 유지 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-          
-          {/* [왼쪽] 캐릭터 이미지 구역 */}
-          <div className="items-center flex justify-center">
-            <button
-              onClick={() => onOpenModal('character', 'main')}
-              className="items-center border-zinc-700 relative w-60 h-60 bg-secondary rounded-lg border-1 border-border hover:border-primary transition-colors overflow-hidden group"
-            >
-              <div className="absolute inset-0 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">
-                👤
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            {primaryStats.map((s, i) => (
+              <div key={i} className="bg-secondary/50 rounded p-3 border border-border flex items-center gap-3">
+                <div className="w-10 h-10 flex-shrink-0 bg-accent rounded p-1">
+                  <img src={s.icon} alt={s.name} className="w-full h-full object-contain" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs text-muted-foreground">{s.name}</div>
+                  <div className="font-bold text-sm">{s.value}</div>
+                </div>
               </div>
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-              <div className="absolute bottom-2 left-2 right-2 bg-zinc-900 backdrop-blur-sm px-2 py-1 rounded text-sm text-center">
-                {character.name}
-              </div>
-            </button>
+            ))}
           </div>
-
-          {/* STATS */}
-          <div className="flex-1 space-y-3">
-            
-            {/* HP, ATK (오른쪽 위) */}
-            <div className="grid grid-cols-2 gap-3">
-              {primaryStats.map((stat, index) => (
-                <div key={index} className="bg-secondary/50 rounded p-3 border border-border">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-accent rounded flex items-center justify-center text-2xl">
-                      <img 
-                                  src={stat.icon} 
-                                  alt={stat.name} 
-                                  className="w-10 h-10 object-contain" // 아이콘 크기에 맞게 조절
-                                />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm text-muted-foreground truncate">{stat.name}</div>
-                      <div className="font-medium">{stat.value}</div>
-                    </div>
-                  </div>
+          <div className="grid grid-cols-2 gap-3">
+            {secondaryStats.map((s, i) => (
+              <div key={i} className="bg-secondary/50 rounded p-3 border border-border flex items-center gap-3">
+                <div className="w-10 h-10 flex-shrink-0 bg-accent rounded p-1">
+                  <img src={s.icon} alt={s.name} className="w-full h-full object-contain" />
                 </div>
-              ))}
-            </div>
-
-            {/* STR, DEX, INT, WIS (오른쪽 아래) */}
-            <div className="grid grid-cols-2 gap-3">
-              {secondaryStats.map((stat, index) => (
-                <div key={index} className="bg-secondary/50 rounded p-3 border border-border">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-accent rounded flex items-center justify-center text-2xl">
-                      <img 
-                                  src={stat.icon} 
-                                  alt={stat.name} 
-                                  className="w-10 h-10 object-contain" // 아이콘 크기에 맞게 조절
-                                />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm text-muted-foreground truncate">{stat.name}</div>
-                      <div className="font-medium">{stat.value}</div>
-                    </div>
-                  </div>
+                <div className="min-w-0">
+                  <div className="text-xs text-muted-foreground">{s.name}</div>
+                  <div className="font-bold text-sm">{s.value}</div>
                 </div>
-              ))}
-            </div>
-
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* 스킬 정보 */}
-      <div className="grid grid-cols-2 gap-3">
-        {skills.map((skill, index) => (
-          <div key={index} className="bg-secondary/50 rounded p-3 border border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-accent rounded flex items-center justify-center text-2xl">
-                {skill.icon}
+      {/* 스킬 정보 구역: 카테고리가 왼쪽에 위치하는 레이아웃 */}
+      <div className="space-y-4">
+        {skillCategories.map((cat, i) => (
+          <div key={i} className="flex flex-col md:flex-row bg-secondary/20 rounded-lg border border-border overflow-hidden">
+            {/* [왼쪽] 아이콘 영역 */}
+            <div className="w-full md:w-36 bg-zinc-800/80 p-4 flex flex-row md:flex-col items-center justify-center gap-3 border-b md:border-b-0 md:border-r border-border">
+
+              {/* 1. 원형 컨테이너: flex와 items-center, justify-center로 자식을 정중앙 배치 */}
+              <div
+                className="w-16 h-16 flex items-center justify-center rounded-full border-[3px] shadow-xl overflow-hidden shrink-0"
+                style={{
+                  backgroundColor: character.images?.skillColor || '#444',
+                  borderColor: 'rgba(255, 255, 255, 1)'
+                }}
+              >
+                {/* 2. 이미지: object-contain으로 비율을 유지하며 중앙에 맞춤 */}
+                <img
+                  src={cat.icon}
+                  alt={cat.title}
+                  className="w-[80%] h-[80%] object-contain block mx-auto"
+                />
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-sm text-muted-foreground truncate">{skill.name}</div>
-                <div className="font-medium">{skill.damage}</div>
-              </div>
+
+              <span className="text-[13px] font-black text-primary text-center leading-tight uppercase tracking-tighter break-keep">
+                {cat.title}
+              </span>
+            </div>
+
+            {/* 오른쪽 상세 스킬 리스트 영역 */}
+            <div className="flex-1 p-4 space-y-3">
+              {cat.list.map((skill: any, idx: number) => (
+                <div key={idx} className="flex justify-between items-center gap-4 border-b border-zinc-800 last:border-0 pb-2 last:pb-0">
+                  <div className="min-w-0 flex-1">
+                    {skill.name ? (
+                      <span className="text-sm font-medium text-zinc-300">
+                        {skill.name}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-zinc-500 italic">피해 계수</span>
+                    )}
+                  </div>
+                  <div className="flex-shrink-0 text-right">
+                    <span className="text-sm font-black text-primary font-mono">
+                      {skill.damagePct[operatorData.skillLevels[cat.levelIdx] - 1]}%
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         ))}
       </div>
 
-      {/* 설정 */}
+      {/* 하단 세팅 구역 */}
       <div className="space-y-4 pt-4 border-t border-border">
-        {/* 불균형 상태 */}
         <div className="flex items-center justify-between">
-          <span>불균형 상태</span>
+          <span className="text-sm font-medium">불균형 상태</span>
           <button
             onClick={() => setImbalanceState(!imbalanceState)}
-            className={`px-4 py-1.5 rounded transition-colors ${
-              imbalanceState
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-secondary text-foreground hover:bg-accent'
-            }`}
+            className={`px-4 py-1.5 rounded text-xs font-bold transition-all ${imbalanceState ? 'bg-primary text-white' : 'bg-secondary text-zinc-400'
+              }`}
           >
             {imbalanceState ? 'ON' : 'OFF'}
           </button>
         </div>
 
-        {/* 방어불능 단계 */}
         <div className="flex items-center justify-between">
-          <span>방어불능 단계</span>
+          <span className="text-sm font-medium">방어불능 단계</span>
           <CustomSelect
             value={defenseBreak}
-            options={[
-              { value: 0, label: '0' },
-              { value: 1, label: '1' },
-              { value: 2, label: '2' },
-              { value: 3, label: '3' },
-              { value: 4, label: '4' },
-            ]}
-            onChange={(v) => setDefenseBreak(Number(v))}
+            options={[0, 1, 2, 3, 4].map(v => ({ value: v, label: String(v) }))}
+            onChange={v => setDefenseBreak(Number(v))}
           />
         </div>
 
-        {/* 아츠부착 */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span>아츠부착 타입</span>
-            <div className="flex gap-2">
-              {artsTypeOptions.map((opt) => (
+            <span className="text-sm font-medium">아츠부착 타입</span>
+            <div className="flex gap-1">
+              {['🔥', '❄️', '⚡', '🌿'].map((label, i) => (
                 <button
-                  key={opt.value}
-                  onClick={() => setArtsType(opt.value)}
-                  className={`w-10 h-10 rounded transition-colors ${
-                    artsType === opt.value
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-secondary hover:bg-accent'
-                  }`}
+                  key={i}
+                  onClick={() => setArtsType(i)}
+                  className={`w-9 h-9 rounded-md transition-all ${artsType === i ? 'bg-primary' : 'bg-secondary hover:bg-zinc-700'
+                    }`}
                 >
-                  {opt.label}
+                  {label}
                 </button>
               ))}
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <span>아츠부착 단계</span>
+            <span className="text-sm font-medium">아츠부착 단계</span>
             <CustomSelect
               value={artsLevel}
-              options={[
-                { value: 0, label: '0' },
-                { value: 1, label: '1' },
-                { value: 2, label: '2' },
-                { value: 3, label: '3' },
-                { value: 4, label: '4' },
-              ]}
-              onChange={(v) => setArtsLevel(Number(v))}
+              options={[0, 1, 2, 3, 4].map(v => ({ value: v, label: String(v) }))}
+              onChange={v => setArtsLevel(Number(v))}
             />
           </div>
         </div>
