@@ -38,7 +38,6 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
   };
 
   const primaryStats = [
-    { name: '생명력', value: getStatValue('HP', operatorData.operatorLevel), icon: '/images/icons/스탯/hp.png' },
     { name: '공격력', value: getStatValue('ATK', operatorData.operatorLevel), icon: '/images/icons/스탯/atk.png' },
   ];
 
@@ -74,20 +73,22 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
           </button>
         </div>
 
+        {/* 공격력 */}
         <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3">
             {primaryStats.map((s, i) => (
               <div key={i} className="bg-secondary/50 rounded p-3 border border-border flex items-center gap-3">
-                <div className="w-10 h-10 flex-shrink-0 bg-accent rounded p-1">
+                <div className="w-15 h-15 flex-shrink-0 bg-accent rounded p-1">
                   <img src={s.icon} alt={s.name} className="w-full h-full object-contain" />
                 </div>
-                <div className="min-w-0">
-                  <div className="text-xs text-muted-foreground">{s.name}</div>
-                  <div className="font-bold text-sm">{s.value}</div>
+                <div className="px-1.5 min-w-0">
+                  <div className="text-[20px] font-bold text-muted-foreground">{s.name}</div>
+                  <div className="text-[20px]font-bold text-sm">{s.value}</div>
                 </div>
               </div>
             ))}
           </div>
+
           <div className="grid grid-cols-2 gap-3">
             {secondaryStats.map((s, i) => (
               <div key={i} className="bg-secondary/50 rounded p-3 border border-border flex items-center gap-3">
