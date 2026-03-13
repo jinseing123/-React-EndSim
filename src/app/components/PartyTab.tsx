@@ -44,6 +44,13 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
 
   const temperamentOptions = Array.from({ length: 9 }, (_, i) => ({ value: i + 1, label: String(i + 1) }));
 
+  const equipmentDefaultIcons = [
+    '/images/icons/기타/방어구.png',
+    '/images/icons/기타/장갑.png',
+    '/images/icons/기타/부품.png',
+    '/images/icons/기타/부품.png',
+  ];
+
   // 중첩된 장비 데이터를 찾는 함수
   const findEquipment = (data: any[], id: string | null) => {
     if (!id) return null;
@@ -130,7 +137,7 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                     {eq.data?.image ? (
                       <img src={eq.data.image} alt={eq.data.name} className="w-[85%] h-[85%] object-contain" />
                     ) : (
-                      <span className="text-xl opacity-40">🎽</span>
+                      <img src={equipmentDefaultIcons[eIdx]} className="w-[44%] h-[44%] object-contain group-hover:scale-110 transition-transform" />
                     )}
                   </button>
 

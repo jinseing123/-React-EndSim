@@ -53,6 +53,13 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
     { title: "궁극기", icon: character.images.ultimate, levelIdx: 3, list: character.skills.ultimate }
   ];
 
+  const equipmentDefaultIcons = [
+    '/images/icons/기타/방어구.png',
+    '/images/icons/기타/장갑.png',
+    '/images/icons/기타/부품.png',
+    '/images/icons/기타/부품.png',
+  ];
+
   const levelOptions = Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: String(i + 1) }));
   const forgeOptions = [
     { value: 0, label: '0' },
@@ -188,7 +195,7 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
                 {eq.data?.image ? (
                   <img src={eq.data.image} alt={eq.data.name} className="w-[85%] h-[85%] object-contain group-hover:scale-110 transition-transform" />
                 ) : (
-                  <span className="text-2xl opacity-40 text-zinc-400 group-hover:scale-110 transition-all">🎽</span>
+                  <img src={equipmentDefaultIcons[index]} className="w-[44%] h-[44%] object-contain group-hover:scale-110 transition-transform" />
                 )}
                 <div className="absolute top-1 left-1 text-[9px] bg-black/60 px-1 rounded text-zinc-300 pointer-events-none">
                   {eq.type}

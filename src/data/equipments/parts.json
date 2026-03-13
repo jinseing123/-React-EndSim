@@ -5,7 +5,7 @@
       {
         "id": "part-1",
         "name": "식양의 숨결 보조 어깨",
-        "image": "/images/equipment/식양의 숨결 보조 어깨.png",
+        "image": "/images/equipments/parts/식양의 숨결 보조 어깨.png",
         "stats": [
           {"name": "의지", "values": [32, 35, 38, 41] },
           {"name": "지능", "values": [21, 23, 25, 27] }
@@ -17,7 +17,7 @@
       {
         "id": "part-2",
         "name": "식양의 숨결 충전 코어 · I",
-        "image": "/images/equipment/식양의 숨결 충전 코어 · I.png",
+        "image": "/images/equipments/parts/식양의 숨결 충전 코어 · I.png",
         "stats": [
           {"name": "지능", "values": [32, 35, 38, 41] },
           {"name": "의지", "values": [21, 23, 25, 27] }
@@ -29,7 +29,7 @@
       {
         "id": "part-3",
         "name": "식양의 숨결 충전 코어",
-        "image": "/images/equipment/식양의 숨결 충전 코어.png",
+        "image": "/images/equipments/parts/식양의 숨결 충전 코어.png",
         "stats": [
           {"name": "지능", "values": [32, 35, 38, 41] },
           {"name": "힘", "values": [21, 23, 25, 27] }
@@ -46,7 +46,7 @@
       {
         "id": "part-4",
         "name": "탁류 화염 절단기",
-        "image": "/images/equipment/탁류 화염 절단기.png",
+        "image": "/images/equipments/parts/탁류 화염 절단기.png",
         "stats": [
           {"name": "지능", "values": [32, 35, 38, 41] },
           {"name": "힘", "values": [21, 23, 25, 27] }
@@ -58,7 +58,7 @@
       {
         "id": "part-5",
         "name": "현하 산소 공급 장치",
-        "image": "/images/equipment/현하 산소 공급 장치.png",
+        "image": "/images/equipments/parts/현하 산소 공급 장치.png",
         "stats": [
           {"name": "지능", "values": [32, 35, 38, 41] },
           {"name": "힘", "values": [21, 23, 25, 27] }

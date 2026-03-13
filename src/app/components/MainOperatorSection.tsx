@@ -179,7 +179,7 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
           <span className="text-sm font-medium">불균형 상태</span>
           <button
             onClick={() => setImbalanceState(!imbalanceState)}
-            className={`px-4 py-1.5 rounded text-xs font-bold transition-all ${imbalanceState ? 'bg-primary text-white' : 'bg-secondary text-zinc-400'
+            className={`px-4 py-1.5 rounded text-xs font-bold transition-all ${imbalanceState ? 'bg-primary text-black' : 'bg-secondary text-zinc-400'
               }`}
           >
             {imbalanceState ? 'ON' : 'OFF'}
