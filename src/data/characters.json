@@ -11,12 +11,12 @@
       "ultimate": "./images/characters/레바테인/스킬/ultimate.png"
     },
     "stats": [
-      { "type": "HP", "label": "생명력", "values": [3811, 4934, 5495] },
-      { "type": "ATK", "label": "공격력", "values": [221, 285, 318] },
-      { "type": "STR", "label": "힘", "values": [85, 109, 121] },
-      { "type": "DEX", "label": "민첩", "values": [69, 89, 99] },
-      { "type": "INT", "label": "지능", "values": [125, 160, 177] },
-      { "type": "WIS", "label": "의지", "values": [62, 80, 89] }
+      {"name": "생명력", "values": [3811, 4934, 5495] },
+      {"name": "공격력", "values": [221, 285, 318] },
+      {"name": "힘", "values": [85, 109, 121] },
+      {"name": "민첩", "values": [69, 89, 99] },
+      {"name": "지능", "values": [125, 160, 177] },
+      {"name": "의지", "values": [62, 80, 89] }
     ],
     "skills": {
       "normal": [

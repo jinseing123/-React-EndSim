@@ -1,0 +1,19 @@
+[
+  {
+    "setName": "식양의 숨결",
+    "equips": [
+      {
+        "id": "armor-1",
+        "name": "식양의 숨결 경장갑",
+        "image": "/images/equipment/식양의 숨결 경장갑.png",
+        "stats": [
+          {"name": "의지", "values": [87, 95, 104, 113] },
+          {"name": "지능", "values": [58, 63, 69, 75] }
+        ],
+        "options": [
+          {"name": "오리지늄 아츠 강도", "values": [20, 22, 24, 27] }
+        ]
+      }
+    ]
+  }
+]

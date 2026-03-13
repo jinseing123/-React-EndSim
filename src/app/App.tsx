@@ -7,9 +7,9 @@ import WeaponSelectModal from './components/WeaponSelectModal';
 import FoodSelectModal from './components/FoodSelectModal';
 
 import charactersData from '../data/characters.json';
-import armorsData from '../data/armor.json';
-import glovesData from '../data/gloves.json';
-import partsData from '../data/parts.json';
+import armorsData from '../data/equipments/armor.json';
+import glovesData from '../data/equipments/gloves.json';
+import partsData from '../data/equipments/parts.json';
 import weaponsData from '../data/weapons.json';
 import foodsData from '../data/foods.json';
 
@@ -122,16 +122,11 @@ export default function App() {
   const handleSelectEquipment = (equipmentId: string) => {
     if (!modalTarget) return;
 
-    const parts = modalTarget.split('-'); // 'main-eq1-상의' -> ['main', 'eq1', '상의'] 이런식으로 나눠짐
+    // 예: 'main-eq1-armor' -> parts[2]는 'armor'
+    // 예: 'party1-eq2-glove' -> parts[2]는 'glove'
+    const parts = modalTarget.split('-');
     const target = parts[0];
-    const eqSlot = parts[1];
-    const eqType = parts[2];
-
-    let equipmentKey: 'armor' | 'glove' | 'part1' | 'part2' = 'armor'; // 해석: equipmentKey는 'armor', 'glove', 'part1', 'part2' 중 하나의 문자열을 가질 수 있는 변수입니다. 초기값은 'armor'로 설정되어 있습니다. 
-    if (eqType === '상의') equipmentKey = 'armor';
-    else if (eqType === '장갑') equipmentKey = 'glove';
-    else if (eqSlot === 'eq3') equipmentKey = 'part1';
-    else if (eqSlot === 'eq4') equipmentKey = 'part2';
+    const equipmentKey = parts[2] as 'armor' | 'glove' | 'part1' | 'part2';
 
     if (target === 'main') {
       setMainOperator({

@@ -1,0 +1,31 @@
+[
+  {
+    "setName": "식양의 숨결",
+    "equips": [
+      {
+        "id": "glove-1",
+        "name": "식양의 숨결 보호 장갑 · I",
+        "image": "/images/equipment/식양의 숨결 보호 장갑 · I.png",
+        "stats": [
+          {"name": "지능", "values": [65, 71, 78, 84] },
+          {"name": "의지", "values": [43, 47, 51, 55] }
+        ],
+        "options": [
+          {"name": "궁극기 충전 효율", "values": [20.5, 22.6, 24.6, 26.7] }
+        ]
+      },
+      {
+        "id": "glove-2",
+        "name": "식양의 숨결 보호 장갑",
+        "image": "/images/equipment/식양의 숨결 보호 장갑.png",
+        "stats": [
+          {"name": "지능", "values": [65, 71, 78, 84] },
+          {"name": "힘", "values": [43, 47, 51, 55] }
+        ],
+        "options": [
+          {"name": "궁극기 충전 효율", "values": [20.5, 22.6, 24.6, 26.7] }
+        ]
+      }
+    ]
+  }
+]

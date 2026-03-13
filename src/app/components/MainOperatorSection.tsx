@@ -32,20 +32,20 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
 
   const character = charactersData.find(c => c.id === operatorData.characterId) || charactersData[0];
 
-  const getStatValue = (type: string, level: number) => {
-    const stat = character.stats.find(s => s.type === type);
+  const getStatValue = (name: string, level: number) => {
+    const stat = character.stats.find(s => s.name === name);
     return stat ? stat.values[level] : 0;
   };
 
   const primaryStats = [
-    { name: '공격력', value: getStatValue('ATK', operatorData.operatorLevel), icon: '/images/icons/스탯/atk.png' },
+    { name: '공격력', value: getStatValue('공격력', operatorData.operatorLevel), icon: '/images/icons/스탯/공격력.png' },
   ];
 
   const secondaryStats = [
-    { name: '힘', value: getStatValue('STR', operatorData.operatorLevel), icon: '/images/icons/스탯/str.png' },
-    { name: '민첩', value: getStatValue('DEX', operatorData.operatorLevel), icon: '/images/icons/스탯/dex.png' },
-    { name: '지능', value: getStatValue('INT', operatorData.operatorLevel), icon: '/images/icons/스탯/int.png' },
-    { name: '의지', value: getStatValue('WIS', operatorData.operatorLevel), icon: '/images/icons/스탯/wis.png' },
+    { name: '힘', value: getStatValue('힘', operatorData.operatorLevel), icon: '/images/icons/스탯/힘.png' },
+    { name: '민첩', value: getStatValue('민첩', operatorData.operatorLevel), icon: '/images/icons/스탯/민첩.png' },
+    { name: '지능', value: getStatValue('지능', operatorData.operatorLevel), icon: '/images/icons/스탯/지능.png' },
+    { name: '의지', value: getStatValue('의지', operatorData.operatorLevel), icon: '/images/icons/스탯/의지.png' },
   ];
 
   const skillCategories = [
@@ -105,54 +105,69 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
         </div>
       </div>
 
-      {/* 스킬 정보 구역: 카테고리가 왼쪽에 위치하는 레이아웃 */}
-      <div className="space-y-4">
-        {skillCategories.map((cat, i) => (
-          <div key={i} className="flex flex-col md:flex-row bg-secondary/20 rounded-lg border border-border overflow-hidden">
-            {/* [왼쪽] 아이콘 영역 */}
-            <div className="w-full md:w-36 bg-zinc-800/80 p-4 flex flex-row md:flex-col items-center justify-center gap-3 border-b md:border-b-0 md:border-r border-border">
 
-              {/* 1. 원형 컨테이너: flex와 items-center, justify-center로 자식을 정중앙 배치 */}
+      {/* 스킬 정보 구역: 2x2 그리드 레이아웃 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {skillCategories.map((cat, i) => (
+          <div key={i} className="flex flex-col bg-secondary/20 rounded-lg border border-border overflow-hidden">
+            {/* 상단: 아이콘 및 타이틀 영역 */}
+            <div className="bg-zinc-800/80 p-3 flex items-center gap-3 border-b border-border">
               <div
-                className="w-16 h-16 flex items-center justify-center rounded-full border-[3px] shadow-xl overflow-hidden shrink-0"
+                className="w-13 h-13 flex items-center justify-center rounded-full border-[2px] shadow-lg overflow-hidden shrink-0"
                 style={{
                   backgroundColor: character.images?.skillColor || '#444',
                   borderColor: 'rgba(255, 255, 255, 1)'
                 }}
               >
-                {/* 2. 이미지: object-contain으로 비율을 유지하며 중앙에 맞춤 */}
                 <img
                   src={cat.icon}
                   alt={cat.title}
-                  className="w-[80%] h-[80%] object-contain block mx-auto"
+                  className="w-[85%] h-[85%] object-contain block mx-auto"
                 />
               </div>
-
-              <span className="text-[13px] font-black text-primary text-center leading-tight uppercase tracking-tighter break-keep">
+              <span className="px-1 text-[15px] font-bold text-primary tracking-tight">
                 {cat.title}
               </span>
             </div>
 
-            {/* 오른쪽 상세 스킬 리스트 영역 */}
-            <div className="flex-1 p-4 space-y-3">
-              {cat.list.map((skill: any, idx: number) => (
-                <div key={idx} className="flex justify-between items-center gap-4 border-b border-zinc-800 last:border-0 pb-2 last:pb-0">
-                  <div className="min-w-0 flex-1">
-                    {skill.name ? (
-                      <span className="text-sm font-medium text-zinc-300">
-                        {skill.name}
-                      </span>
-                    ) : (
-                      <span className="text-xs text-zinc-500 italic">피해 계수</span>
-                    )}
-                  </div>
-                  <div className="flex-shrink-0 text-right">
-                    <span className="text-sm font-black text-primary font-mono">
-                      {skill.damagePct[operatorData.skillLevels[cat.levelIdx] - 1]}%
+            {/* 하단: 스킬 리스트 영역 */}
+            <div className="p-3 space-y-2">
+              {cat.list.map((skill: any, idx: number) => {
+                const val = skill.damagePct[operatorData.skillLevels[cat.levelIdx] - 1];
+                const critVal = Math.floor(val * 1.5);
+
+                return (
+                  <div key={idx} className="flex justify-between items-center gap-2 border-b border-zinc-800 last:border-0 pb-1 last:pb-0">
+                    {/* 스킬 이름 */}
+                    <span className="text-[13px] text-zinc-400 truncate flex-1">
+                      {skill.name || "피해 계수"}
                     </span>
+
+                    {/* 피해량 표기: [일반] / [아이콘] [치명타] */}
+                    <div className="flex items-center gap-2">
+                      {/* 일반 피해량 */}
+                      <span className="text-[15px] font-mono font-bold text-primary">
+                        {val}%
+                      </span>
+
+                      <span className="text-zinc-600 text-[12px]">/</span>
+
+                      {/* 치명타 피해량 및 아이콘 */}
+                      <div className="flex items-center gap-1">
+                        <img
+                          src={"./images/icons/기타/치명타.png"}
+                          alt="crit"
+                          className="w-4 h-4 object-contain"
+                        />
+                        <span className="text-[15px] font-mono font-bold text-orange-400">
+                          {critVal}%
+                        </span>
+                      </div>
+                    </div>
+
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         ))}

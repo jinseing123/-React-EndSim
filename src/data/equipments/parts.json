@@ -1,0 +1,73 @@
+[
+  {
+    "setName": "식양의 숨결",
+    "equips": [
+      {
+        "id": "part-1",
+        "name": "식양의 숨결 보조 어깨",
+        "image": "/images/equipment/식양의 숨결 보조 어깨.png",
+        "stats": [
+          {"name": "의지", "values": [32, 35, 38, 41] },
+          {"name": "지능", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "궁극기 충전 효율", "values": [24.6, 27.1, 29.6, 32] }
+        ]
+      },
+      {
+        "id": "part-2",
+        "name": "식양의 숨결 충전 코어 · I",
+        "image": "/images/equipment/식양의 숨결 충전 코어 · I.png",
+        "stats": [
+          {"name": "지능", "values": [32, 35, 38, 41] },
+          {"name": "의지", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "치유 효율 보너스", "values": [20.7, 22.8, 24.8, 26.9] }
+        ]
+      },
+      {
+        "id": "part-3",
+        "name": "식양의 숨결 충전 코어",
+        "image": "/images/equipment/식양의 숨결 충전 코어.png",
+        "stats": [
+          {"name": "지능", "values": [32, 35, 38, 41] },
+          {"name": "힘", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "치유 효율 보너스", "values": [24.6, 27.1, 29.6, 32] }
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "조류의 숨결",
+    "equips": [
+      {
+        "id": "part-4",
+        "name": "탁류 화염 절단기",
+        "image": "/images/equipment/탁류 화염 절단기.png",
+        "stats": [
+          {"name": "지능", "values": [32, 35, 38, 41] },
+          {"name": "힘", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "일반 공격 피해 보너스", "values": [27.6, 30.4, 33.1, 35.9] }
+        ]
+      },
+      {
+        "id": "part-5",
+        "name": "현하 산소 공급 장치",
+        "image": "/images/equipment/현하 산소 공급 장치.png",
+        "stats": [
+          {"name": "지능", "values": [32, 35, 38, 41] },
+          {"name": "힘", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "냉기와 전기 피해 보너스", "values": [23, 25.3, 27.6, 29.9] }
+        ]
+      }
+    ]
+  }
+
+]
