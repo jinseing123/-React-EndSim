@@ -82,8 +82,8 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
                   <img src={s.icon} alt={s.name} className="w-full h-full object-contain" />
                 </div>
                 <div className="px-1.5 min-w-0">
-                  <div className="text-[20px] font-bold text-muted-foreground">{s.name}</div>
-                  <div className="text-[20px]font-bold text-sm">{s.value}</div>
+                  <div className="text-[15px] font-bold text-muted-foreground">{s.name}</div>
+                  <div className="text-[18px] font-bold">{s.value}</div>
                 </div>
               </div>
             ))}

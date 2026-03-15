@@ -1,20 +1,28 @@
 [
   {
-    "name": "화염의 집행자",
+    "name": "식양의 숨결",
     "options": [
       {
         "target": "자신",
-        "name": "치명타 확률 증가",
-        "value": 10,
-        "condition": { "type": "HP_ABOVE", "value": 50 }
+        "effects": [
+          { "name": "생명력 증가", "value": 1000, "isPercent": false },
+          { "name": "치명타 확률 증가", "value": 10, "isPercent": true }
+        ]
+      },
+      {
+        "target": "파티원",
+        "effects": [
+          { "name": "피해 증가", "value": 16, "isPercent": true },
+          { "name": "받는 피해 감소", "value": 10, "isPercent": true }
+        ]
       },
       {
         "target": "몹",
-        "name": "받는 피해 증가",
-        "value": 20,
-        "condition": null
+        "effects": [
+          { "name": "받는 피해 증가", "value": 20, "isPercent": true }
+        ]
       }
     ],
-    "desc": "4세트 효과: 생명력이 50% 이상일 때 치명타 확률이 10% 증가하고, 적이 받는 피해가 20% 증가합니다."
+    "desc": "장착자가 증폭, 비호, 취약, 허약을 부여한 후, 다른 팀원이 주는 피해 +16%, 15초 동안 지속. 해당 효과는 중첩되지 않습니다."
   }
 ]

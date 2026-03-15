@@ -3,7 +3,7 @@
     "id": "Laevatain",
     "name": "레바테인",
     "images": {
-      "profile": "./images/characters/레바테인/프로필/레바테인.png",
+      "profile": "./images/characters/레바테인/프로필.png",
       "skillColor": "#FF623D",
       "normal": "./images/characters/레바테인/스킬/normal.png",
       "battle": "./images/characters/레바테인/스킬/battle.png",

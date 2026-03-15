@@ -1,11 +1,12 @@
 import React from 'react';
 import CustomSelect from './CustomSelect';
-import armorsData from '../../data/equipments/armor.json';
+import armorsData from '../../data/equipments/armors.json';
 import glovesData from '../../data/equipments/gloves.json';
 import partsData from '../../data/equipments/parts.json';
 import weaponsData from '../../data/weapons.json';
 import foodsData from '../../data/foods.json';
 import charactersData from '../../data/characters.json';
+import equipmentSetsData from '../../data/equipments/equipmentSets.json';
 
 interface OperatorData {
   characterId: string | null;
@@ -74,7 +75,7 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
     if (!id) return null;
     for (const group of data) {
       const item = group.equips.find((e: any) => e.id === id);
-      if (item) return item;
+      if (item) return { ...item, setName: group.setName };
     }
     return null;
   };
@@ -101,6 +102,30 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
       data: findEquipment(partsData, operatorData.equipment.part2),
     },
   ];
+
+  // ─── 세트효과 계산 ───────────────────────────────────────────────
+  // 장착된 장비의 setName을 세트별로 카운트
+  const setCountMap: Record<string, number> = {};
+  for (const eq of equipmentData) {
+    if (eq.data?.setName) {
+      setCountMap[eq.data.setName] = (setCountMap[eq.data.setName] || 0) + 1;
+    }
+  }
+  // 3개 이상 착용한 세트만 추출하여 equipmentSets에서 매칭
+  const activeSetEffects = Object.entries(setCountMap)
+    .filter(([, count]) => count >= 3)
+    .map(([setName]) => {
+      const setEffect = equipmentSetsData.find(s => s.name === setName);
+      return setEffect ? { setName, setEffect } : null;
+    })
+    .filter(Boolean) as { setName: string; setEffect: typeof equipmentSetsData[number] }[];
+  // ─────────────────────────────────────────────────────────────────
+
+  const targetLabelColors: Record<string, string> = {
+    '자신': 'text-sky-400',
+    '파티원': 'text-emerald-400',
+    '몹': 'text-rose-400',
+  };
 
   const weaponData = weaponsData.find(w => w.id === operatorData.weaponId);
   const foodData = foodsData.find(f => f.id === operatorData.foodId);
@@ -265,37 +290,99 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
             </div>
           ))}
         </div>
+
+        {/* ──────────────────────────────────────────── */}
       </div>
+
+      {/* ─── 세트 효과 표기 (장비 섹션 div 밖) ─── */}
+      {activeSetEffects.length > 0 && (
+        <div className="space-y-3">
+          {activeSetEffects.map(({ setName, setEffect }) => (
+            <div
+              key={setName}
+              className="bg-zinc-800/60 border border-amber-500/30 rounded-lg p-3 space-y-2"
+            >
+              {/* 세트 이름 + 활성 뱃지 */}
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold text-amber-400 tracking-wide">{setName}</span>
+                <span className="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded-full font-bold">
+                  세트효과 ({setCountMap[setName]}개)
+                </span>
+              </div>
+
+              {/* 옵션 목록: 전체를 하나의 grid로 감싸야 모든 행의 열 너비가 동일하게 정렬됨 */}
+              <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5">
+                {setEffect.options.map((opt, oi) => (
+                  <React.Fragment key={oi}>
+                    <span className={`text-[10px] font-bold leading-5 ${targetLabelColors[opt.target] ?? 'text-zinc-400'}`}>
+                      [{opt.target}]
+                    </span>
+                    <div className="flex flex-wrap gap-x-2 gap-y-0.5">
+                      {opt.effects.map((effect, ei) => (
+                        <span key={ei} className="text-[10px] text-zinc-300 leading-5">
+                          {effect.name}{" "}
+                          <span className="font-bold text-amber-300">
+                            +{effect.value}{effect.isPercent ? '%' : ''}
+                          </span>
+                          {ei < opt.effects.length - 1 && (
+                            <span className="text-zinc-600 mx-1">·</span>
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                  </React.Fragment>
+                ))}
+              </div>
+
+              {/* 세트 설명: overflow 없이 전체 출력 */}
+              {setEffect.desc && (
+                <p className="text-[10px] text-zinc-500 leading-relaxed border-t border-zinc-700/50 pt-2">
+                  {setEffect.desc}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {/* ──────────────────────────────────────────── */}
 
       {/* 무기 섹션 */}
       <div>
         <h3 className="mb-3 text-sm font-bold">무기</h3>
-        <div className="flex gap-4">
+        <div className="flex gap-3 items-stretch">
+          {/* 무기 아이콘 버튼: overflow-hidden 제거, 크기 고정 */}
           <button
             onClick={() => onOpenModal('weapon', 'main-weapon')}
-            className="w-24 h-24 bg-secondary rounded-xl border-2 border-zinc-700 hover:border-primary transition-all flex items-center justify-center text-3xl group overflow-hidden shrink-0"
+            className="w-20 h-20 shrink-0 bg-zinc-800 rounded-xl border-2 border-zinc-700 hover:border-primary transition-all flex items-center justify-center group"
           >
             {weaponData?.image ? (
-              <img src={weaponData.image} alt={weaponData.name} className="w-[80%] h-[80%] object-contain group-hover:scale-110 transition-transform" />
+              <img src={weaponData.image} alt={weaponData.name} className="w-[75%] h-[75%] object-contain group-hover:scale-110 transition-transform" />
             ) : (
-              <span className="group-hover:scale-110 transition-transform opacity-40">⚔️</span>
+              <span className="text-3xl opacity-30 group-hover:scale-110 transition-transform">⚔️</span>
             )}
           </button>
+
           {weaponData ? (
-            <div className="flex-1 bg-secondary/30 p-3 rounded-xl border border-zinc-800 flex flex-col justify-center space-y-1.5 min-w-0">
-              <div className="font-bold text-sm text-primary truncate">{weaponData.name}</div>
-              <div className="text-xs text-zinc-400 font-medium">기본 공격력: <span className="text-zinc-100">{weaponData.attack}</span></div>
-              <div className="grid grid-cols-1 gap-1.5 pt-1.5 border-t border-zinc-800">
+            <div className="flex-1 min-w-0 bg-zinc-800/50 rounded-xl border border-zinc-700 p-3 space-y-2">
+              {/* 무기 이름 + 공격력 */}
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="font-bold text-sm text-primary truncate">{weaponData.name}</span>
+                <span className="text-[11px] text-zinc-400 shrink-0">ATK <span className="text-zinc-200 font-bold">{weaponData.attack}</span></span>
+              </div>
+              {/* 옵션 목록 */}
+              <div className="space-y-1 border-t border-zinc-700/60 pt-2">
                 {weaponData.options.map((option, idx) => (
-                  <div key={idx} className="flex items-center justify-between bg-black/20 p-1.5 rounded-lg gap-2">
-                    <div className="min-w-0 flex-1">
-                      <div className="text-[10px] text-zinc-500 font-medium truncate">{option.optionName}</div>
+                  <div key={idx} className="grid grid-cols-[1fr_auto] items-center gap-2">
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-zinc-500 block truncate">{option.optionName}</span>
                       <div className="flex flex-wrap gap-x-2">
                         {option.effects.map((effect, effIdx) => (
-                          <div key={effIdx} className="text-[11px] font-bold text-zinc-300">
-                            {effect.label} +{effect.values[operatorData.temperaments[idx] - 1]}
-                            {effect.type.includes('CHANCE') || effect.type.includes('DAMAGE') ? '%' : ''}
-                          </div>
+                          <span key={effIdx} className="text-[11px] font-bold text-zinc-200">
+                            {effect.label}{" "}
+                            <span className="text-primary">
+                              +{effect.values[operatorData.temperaments[idx] - 1]}{effect.type.includes('CHANCE') || effect.type.includes('DAMAGE') ? '%' : ''}
+                            </span>
+                          </span>
                         ))}
                       </div>
                     </div>
@@ -307,14 +394,14 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
                         newTemp[idx] = Number(v);
                         onUpdate({ ...operatorData, temperaments: newTemp });
                       }}
-                      className="h-6 w-10 text-[10px]"
+                      className="text-[10px] shrink-0"
                     />
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="flex-1 bg-secondary/20 rounded-xl border border-dashed border-zinc-800 flex items-center justify-center text-xs text-zinc-500">
+            <div className="flex-1 bg-zinc-800/20 rounded-xl border border-dashed border-zinc-700 flex items-center justify-center text-xs text-zinc-500">
               무기를 장착하여 전투력을 높이세요
             </div>
           )}
@@ -324,30 +411,32 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
       {/* 음식 섹션 */}
       <div>
         <h3 className="mb-3 text-sm font-bold">음식</h3>
-        <div className="flex gap-4">
+        <div className="flex gap-3 items-stretch">
           <button
             onClick={() => onOpenModal('food', 'main-food')}
-            className="w-24 h-24 bg-secondary rounded-xl border-2 border-zinc-700 hover:border-primary transition-all flex items-center justify-center text-3xl group shrink-0"
+            className="w-20 h-20 shrink-0 bg-zinc-800 rounded-xl border-2 border-zinc-700 hover:border-primary transition-all flex items-center justify-center group"
           >
             {foodData?.image ? (
-              <img src={foodData.image} alt={foodData.name} className="w-[80%] h-[80%] object-contain group-hover:scale-110 transition-transform" />
+              <img src={foodData.image} alt={foodData.name} className="w-[75%] h-[75%] object-contain group-hover:scale-110 transition-transform" />
             ) : (
-              <span className="group-hover:scale-110 transition-transform opacity-40">🍖</span>
+              <span className="text-3xl opacity-30 group-hover:scale-110 transition-transform">🍖</span>
             )}
           </button>
+
           {foodData ? (
-            <div className="flex-1 bg-secondary/30 p-3 rounded-xl border border-zinc-800 flex flex-col justify-center min-w-0">
-              <div className="font-bold text-sm text-orange-400 mb-1 truncate">{foodData.name}</div>
-              <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+            <div className="flex-1 min-w-0 bg-zinc-800/50 rounded-xl border border-zinc-700 p-3 space-y-1.5">
+              <span className="font-bold text-sm text-orange-400 block truncate">{foodData.name}</span>
+              <div className="flex flex-wrap gap-x-3 gap-y-1 border-t border-zinc-700/60 pt-2">
                 {foodData.effects.map((effect, idx) => (
-                  <div key={idx} className="text-xs font-medium text-zinc-400">
-                    {effect.label} <span className="text-zinc-200">+{effect.value}{effect.type.includes('PERCENT') ? '%' : ''}</span>
+                  <div key={idx} className="text-[11px] text-zinc-400">
+                    {effect.label}{" "}
+                    <span className="font-bold text-orange-300">+{effect.value}{effect.type.includes('PERCENT') ? '%' : ''}</span>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="flex-1 bg-secondary/20 rounded-xl border border-dashed border-zinc-800 flex items-center justify-center text-xs text-zinc-500">
+            <div className="flex-1 bg-zinc-800/20 rounded-xl border border-dashed border-zinc-700 flex items-center justify-center text-xs text-zinc-500">
               전투에 도움이 되는 음식을 섭취하세요
             </div>
           )}
