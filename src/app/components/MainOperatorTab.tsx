@@ -123,7 +123,7 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
 
   const targetLabelColors: Record<string, string> = {
     '자신': 'text-sky-400',
-    '파티원': 'text-emerald-400',
+    '파티': 'text-emerald-400',
     '몹': 'text-rose-400',
   };
 

@@ -64,7 +64,7 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
 
   const targetLabelColors: Record<string, string> = {
     '자신': 'text-sky-400',
-    '파티원': 'text-emerald-400',
+    '파티': 'text-emerald-400',
     '몹': 'text-rose-400',
   };
 
@@ -193,7 +193,7 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                             <img src={`/images/icons/스탯/${statName}.png`} alt={statName} className="bg-accent rounded w-9 h-9 object-contain shrink-0" />
                             <span className="text-xs text-zinc-400 truncate">{statName}</span>
                           </div>
-                          <span className="text-sm font-bold tabular-nums shrink-0">{getStatValue(statName, member.operatorLevel)}</span>
+                          <span className="px-1 text-sm font-bold tabular-nums shrink-0">{getStatValue(statName, member.operatorLevel)}</span>
                         </div>
                       ))}
                     </div>

@@ -10,16 +10,17 @@
         ]
       },
       {
-        "target": "파티원",
+        "target": "자신을 제외한 파티",
         "effects": [
-          { "name": "피해 증가", "value": 16, "isPercent": true },
+          { "name": "아츠취약", "value": 16, "isPercent": true },
           { "name": "받는 피해 감소", "value": 10, "isPercent": true }
         ]
       },
       {
-        "target": "몹",
+        "target": "파티",
         "effects": [
-          { "name": "받는 피해 증가", "value": 20, "isPercent": true }
+          { "name": "피해 증가", "value": 16, "isPercent": true },
+          { "name": "받는 피해 감소", "value": 10, "isPercent": true }
         ]
       }
     ],

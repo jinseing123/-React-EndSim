@@ -29,6 +29,8 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
   const [defenseBreak, setDefenseBreak] = useState(0);
   const [artsType, setArtsType] = useState(0);
   const [artsLevel, setArtsLevel] = useState(0);
+  const [artsAbnormalType, setArtsAbnormalType] = useState<number | null>(null);
+  const [artsAbnormalParty, setArtsAbnormalParty] = useState(0);
 
   const character = charactersData.find(c => c.id === operatorData.characterId) || charactersData[0];
 
@@ -48,8 +50,13 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
     { name: '의지', value: getStatValue('의지', operatorData.operatorLevel), icon: '/images/icons/스탯/의지.png' },
   ];
 
+  const extraStats = [
+    { name: '치명타 확률', value: 0, icon: '/images/icons/기타/치명타.png' },
+    { name: '아츠 강도', value: 0, icon: '/images/icons/기타/아츠강도.png' },
+  ];
+
   const skillCategories = [
-    { title: "일반 공격", icon: character.images.normal, levelIdx: 0, list: character.skills.normal },
+    { title: "기타", icon: character.images.normal, levelIdx: 0, list: character.skills.normal },
     { title: "배틀 스킬", icon: character.images.battle, levelIdx: 1, list: character.skills.battle },
     { title: "연계 스킬", icon: character.images.combo, levelIdx: 2, list: character.skills.combo },
     { title: "궁극기", icon: character.images.ultimate, levelIdx: 3, list: character.skills.ultimate }
@@ -60,13 +67,22 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
       <h2 className="text-xl font-bold">메인 오퍼레이터</h2>
 
       {/* 상단 이미지 및 스탯 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         <div className="flex justify-center">
           <button
             onClick={() => onOpenModal('character', 'main')}
-            className="relative w-60 h-60 bg-secondary rounded-lg border border-border hover:border-primary transition-colors group overflow-hidden"
+            className="relative w-[80%] aspect-square rounded-full border-[3px] border-white shadow-lg group overflow-hidden"
+            style={{ backgroundColor: character.images?.skillColor || '#444' }}
           >
-            <div className="absolute inset-0 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">👤</div>
+            {character.images?.profile ? (
+              <img
+                src={character.images.profile}
+                alt={character.name}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform">👤</div>
+            )}
             <div className="absolute bottom-2 left-2 right-2 bg-zinc-900/80 backdrop-blur-sm px-2 py-1 rounded text-sm text-center font-bold">
               {character.name}
             </div>
@@ -91,6 +107,20 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
 
           <div className="grid grid-cols-2 gap-3">
             {secondaryStats.map((s, i) => (
+              <div key={i} className="bg-secondary/50 rounded p-3 border border-border flex items-center gap-3">
+                <div className="w-10 h-10 flex-shrink-0 bg-accent rounded p-1">
+                  <img src={s.icon} alt={s.name} className="w-full h-full object-contain" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs text-muted-foreground">{s.name}</div>
+                  <div className="font-bold text-sm">{s.value}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {extraStats.map((s, i) => (
               <div key={i} className="bg-secondary/50 rounded p-3 border border-border flex items-center gap-3">
                 <div className="w-10 h-10 flex-shrink-0 bg-accent rounded p-1">
                   <img src={s.icon} alt={s.name} className="w-full h-full object-contain" />
@@ -199,14 +229,20 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">아츠부착 타입</span>
             <div className="flex gap-1">
-              {['🔥', '❄️', '⚡', '🌿'].map((label, i) => (
+              {[
+                { label: '열기 부착', icon: '/images/icons/아츠부착/열기 부착.png' },
+                { label: '냉기 부착', icon: '/images/icons/아츠부착/냉기 부착.png' },
+                { label: '전기 부착', icon: '/images/icons/아츠부착/전기 부착.png' },
+                { label: '자연 부착', icon: '/images/icons/아츠부착/자연 부착.png' },
+              ].map((item, i) => (
                 <button
                   key={i}
                   onClick={() => setArtsType(i)}
-                  className={`w-9 h-9 rounded-md transition-all ${artsType === i ? 'bg-primary' : 'bg-secondary hover:bg-zinc-700'
+                  className={`w-9 h-9 rounded-md transition-all flex items-center justify-center ${artsType === i ? 'bg-primary ring-2 ring-primary/50' : 'bg-secondary hover:bg-zinc-700'
                     }`}
+                  title={item.label}
                 >
-                  {label}
+                  <img src={item.icon} alt={item.label} className="w-6 h-6 object-contain" />
                 </button>
               ))}
             </div>
@@ -217,6 +253,45 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
               value={artsLevel}
               options={[0, 1, 2, 3, 4].map(v => ({ value: v, label: String(v) }))}
               onChange={v => setArtsLevel(Number(v))}
+            />
+          </div>
+        </div>
+
+        {/* 아츠이상 */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">아츠이상 타입</span>
+            <div className="flex gap-1">
+              {[
+                { label: '연소', icon: '/images/icons/아츠이상/연소.png' },
+                { label: '동결', icon: '/images/icons/아츠이상/동결.png' },
+                { label: '쇄빙', icon: '/images/icons/아츠이상/쇄빙.png' },
+                { label: '감전', icon: '/images/icons/아츠이상/감전.png' },
+                { label: '부식', icon: '/images/icons/아츠이상/부식.png' },
+              ].map((item, i) => (
+                <button
+                  key={i}
+                  onClick={() => setArtsAbnormalType(artsAbnormalType === i ? null : i)}
+                  className={`w-9 h-9 rounded-md transition-all flex items-center justify-center ${artsAbnormalType === i ? 'bg-primary ring-2 ring-primary/50' : 'bg-secondary hover:bg-zinc-700'
+                    }`}
+                  title={item.label}
+                >
+                  <img src={item.icon} alt={item.label} className="w-6 h-6 object-contain" />
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">아츠이상 부여 파티원</span>
+            <CustomSelect
+              value={artsAbnormalParty}
+              options={[
+                { value: 0, label: '없음' },
+                { value: 1, label: '파티원 1' },
+                { value: 2, label: '파티원 2' },
+                { value: 3, label: '파티원 3' },
+              ]}
+              onChange={v => setArtsAbnormalParty(Number(v))}
             />
           </div>
         </div>

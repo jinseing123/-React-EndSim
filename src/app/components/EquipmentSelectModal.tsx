@@ -1,6 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
-import armorsData from '../../data/equipments/armor.json';
+import armorsData from '../../data/equipments/armors.json';
 import glovesData from '../../data/equipments/gloves.json';
 import partsData from '../../data/equipments/parts.json';
 
