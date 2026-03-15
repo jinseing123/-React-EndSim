@@ -1,0 +1,20 @@
+[
+  {
+    "name": "화염의 집행자",
+    "options": [
+      {
+        "target": "자신",
+        "name": "치명타 확률 증가",
+        "value": 10,
+        "condition": { "type": "HP_ABOVE", "value": 50 }
+      },
+      {
+        "target": "몹",
+        "name": "받는 피해 증가",
+        "value": 20,
+        "condition": null
+      }
+    ],
+    "desc": "4세트 효과: 생명력이 50% 이상일 때 치명타 확률이 10% 증가하고, 적이 받는 피해가 20% 증가합니다."
+  }
+]
