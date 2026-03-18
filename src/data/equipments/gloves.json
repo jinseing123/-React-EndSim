@@ -7,11 +7,11 @@
         "name": "식양의 숨결 보호 장갑 · I",
         "image": "/images/equipments/gloves/식양의 숨결 보호 장갑 · I.png",
         "stats": [
-          {"name": "지능", "values": [65, 71, 78, 84] },
-          {"name": "의지", "values": [43, 47, 51, 55] }
+          {"name": "지능", "type": "INT", "values": [65, 71, 78, 84] },
+          {"name": "의지", "type": "WILL", "values": [43, 47, 51, 55] }
         ],
         "options": [
-          {"name": "궁극기 충전 효율", "values": [20.5, 22.6, 24.6, 26.7] }
+          {"name": "궁극기 충전 효율", "type": "ULTIMATE_CHARGE", "values": [20.5, 22.6, 24.6, 26.7] }
         ]
       },
       {
@@ -19,11 +19,11 @@
         "name": "식양의 숨결 보호 장갑",
         "image": "/images/equipments/gloves/식양의 숨결 보호 장갑.png",
         "stats": [
-          {"name": "지능", "values": [65, 71, 78, 84] },
-          {"name": "힘", "values": [43, 47, 51, 55] }
+          {"name": "지능", "type": "INT", "values": [65, 71, 78, 84] },
+          {"name": "힘", "type": "STR", "values": [43, 47, 51, 55] }
         ],
         "options": [
-          {"name": "궁극기 충전 효율", "values": [20.5, 22.6, 24.6, 26.7] }
+          {"name": "궁극기 충전 효율", "type": "ULTIMATE_CHARGE", "values": [20.5, 22.6, 24.6, 26.7] }
         ]
       }
     ]
@@ -36,13 +36,44 @@
         "name": "조류의 물결 금속 장갑",
         "image": "/images/equipments/gloves/조류의 물결 금속 장갑.png",
         "stats": [
-          {"name": "힘", "values": [65, 71, 78, 84] },
-          {"name": "의지", "values": [43, 47, 51, 55] }
+          {"name": "힘", "type": "STR", "values": [65, 71, 78, 84] },
+          {"name": "의지", "type": "WILL", "values": [43, 47, 51, 55] }
         ],
         "options": [
-          {"name": "냉기와 전기 피해 보너스", "values": [19.2, 21.1, 23.0, 24.9] }
+          {"name": "냉기 피해 보너스", "type": "ICE_DMG", "values": [19.2, 21.1, 23.0, 24.9] },
+          {"name": "전기 피해 보너스", "type": "ELECTRIC_DMG", "values": [19.2, 21.1, 23.0, 24.9] }
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "응룡 50식",
+    "equips": [
+      {
+        "id": "glove-4",
+        "name": "응룡 50식 보호 장갑 · I",
+        "image": "/images/equipments/gloves/응룡 50식 보호 장갑 · I.png",
+        "stats": [
+          {"name": "의지", "type": "WILL", "values": [65, 71, 78, 84] },
+          {"name": "민첩", "type": "DEX", "values": [43, 47, 51, 55] }
+        ],
+        "options": [
+          {"name": "연계 스킬 피해 보너스", "type": "COMBO_DMG", "values": [34.5, 38, 41.4, 44.9] }
+        ]
+      },
+      {
+        "id": "glove-5",
+        "name": "응룡 50식 보호 장갑",
+        "image": "/images/equipments/gloves/응룡 50식 보호 장갑.png",
+        "stats": [
+          {"name": "민첩", "type": "DEX", "values": [65, 71, 78, 84] },
+          {"name": "지능", "type": "INT", "values": [43, 47, 51, 55] }
+        ],
+        "options": [
+          {"name": "연계 스킬 피해 보너스", "type": "COMBO_DMG", "values": [34.5, 38, 41.4, 44.9] }
         ]
       }
     ]
   }
+  
 ]

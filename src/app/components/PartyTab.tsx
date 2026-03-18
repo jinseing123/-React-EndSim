@@ -307,7 +307,7 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                               <span key={ei} className="text-[10px] text-zinc-300 leading-5">
                                 {effect.name}{" "}
                                 <span className="font-bold text-amber-300">
-                                  +{effect.value}{effect.isPercent ? '%' : ''}
+                                  +{effect.value}%
                                 </span>
                                 {ei < opt.effects.length - 1 && (
                                   <span className="text-zinc-600 mx-1">·</span>
@@ -319,7 +319,7 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                       ))}
                     </div>
                     {setEffect.desc && (
-                      <p className="text-[10px] text-zinc-500 leading-relaxed border-t border-zinc-700/50 pt-1.5">
+                      <p className="text-[10px] text-zinc-500 leading-relaxed border-t border-zinc-700/50 pt-1.5 whitespace-pre-line">
                         {setEffect.desc}
                       </p>
                     )}

@@ -7,11 +7,11 @@
         "name": "식양의 숨결 경장갑",
         "image": "/images/equipments/armors/식양의 숨결 경장갑.png",
         "stats": [
-          {"name": "의지", "values": [87, 95, 104, 113] },
-          {"name": "지능", "values": [58, 63, 69, 75] }
+          {"name": "의지", "type": "WILL", "values": [87, 95, 104, 113] },
+          {"name": "지능", "type": "INT", "values": [58, 63, 69, 75] }
         ],
         "options": [
-          {"name": "오리지늄 아츠 강도", "values": [20, 22, 24, 27] }
+          {"name": "오리지늄 아츠 강도", "type": "ARTS_INTENSITY", "values": [20, 22, 24, 27] }
         ]
       }
     ]
@@ -24,11 +24,52 @@
         "name": "낙조 경갑",
         "image": "/images/equipments/armors/낙조 경갑.png",
         "stats": [
-          {"name": "의지", "values": [87, 95, 104, 113] },
-          {"name": "지능", "values": [58, 63, 69, 75] }
+          {"name": "의지", "type": "WILL", "values": [87, 95, 104, 113] },
+          {"name": "지능", "type": "INT", "values": [58, 63, 69, 75] }
         ],
         "options": [
-          {"name": "궁극기 충전 효율", "values": [12.3, 13.6, 14.8, 16] }
+          {"name": "궁극기 충전 효율", "type": "ULTIMATE_CHARGE", "values": [12.3, 13.6, 14.8, 16] }
+        ]
+      }
+    ]
+  }, 
+  {
+    "setName": "응룡 50식",
+    "equips": [
+      {
+        "id": "armor-3",
+        "name": "응룡 50식 중갑 · II",
+        "image": "/images/equipments/armors/응룡 50식 중갑 · II.png",
+        "stats": [
+          {"name": "민첩", "type": "DEX", "values": [87, 95, 104, 113] },
+          {"name": "지능", "type": "INT", "values": [58, 63, 69, 75] }
+        ],
+        "options": [
+          {"name": "연계 스킬 피해 보너스", "type": "COMBO_DMG", "values": [20.7, 22.8, 24.8, 26.9] }
+        ]
+      },
+      {
+        "id": "armor-4",
+        "name": "응룡 50식 중갑 · I",
+        "image": "/images/equipments/armors/응룡 50식 중갑 · I.png",
+        "stats": [
+          {"name": "민첩", "type": "DEX", "values": [87, 95, 104, 113] },
+          {"name": "힘", "type": "STR", "values": [58, 63, 69, 75] }
+        ],
+        "options": [
+          {"name": "궁극기 충전 효율", "type": "ULTIMATE_CHARGE", "values": [12.3, 13.6, 14.8, 16] }
+        ]
+      },
+      {
+        "id": "armor-5",
+        "name": "응룡 50식 중갑",
+        "image": "/images/equipments/armors/응룡 50식 중갑.png",
+        "stats": [
+          {"name": "힘", "type": "STR", "values": [87, 95, 104, 113] },
+          {"name": "의지", "type": "WILL", "values": [58, 63, 69, 75] }
+        ],
+        "options": [
+          {"name": "물리 피해 보너스", "type": "PHYSICAL_DMG", "values": [11.5, 12.7, 13.8, 14.9] }
         ]
       }
     ]

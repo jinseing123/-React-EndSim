@@ -11,12 +11,12 @@
       "ultimate": "./images/characters/레바테인/스킬/ultimate.png"
     },
     "stats": [
-      {"name": "생명력", "values": [3811, 4934, 5495] },
-      {"name": "공격력", "values": [221, 285, 318] },
-      {"name": "힘", "values": [85, 109, 121] },
-      {"name": "민첩", "values": [69, 89, 99] },
-      {"name": "지능", "values": [125, 160, 177] },
-      {"name": "의지", "values": [62, 80, 89] }
+      {"name": "생명력", "type": "HP", "values": [3811, 4934, 5495] },
+      {"name": "공격력", "type": "STAT_ATK", "values": [221, 285, 318] },
+      {"name": "힘", "type": "STR", "values": [85, 109, 121] },
+      {"name": "민첩", "type": "DEX", "values": [69, 89, 99] },
+      {"name": "지능", "type": "INT", "values": [125, 160, 177] },
+      {"name": "의지", "type": "WILL", "values": [62, 80, 89] }
     ],
     "buffs": [
     ],
@@ -112,17 +112,18 @@
       "ultimate": "./images/characters/질베르타/스킬/ultimate.png"
     },
     "stats": [
-      {"name": "생명력", "values": [3811, 4934, 5495] },
-      {"name": "공격력", "values": [228, 296, 329] },
-      {"name": "힘", "values": [62, 80, 89] },
-      {"name": "민첩", "values": [64, 83, 92] },
-      {"name": "지능", "values": [89, 114, 127] },
-      {"name": "의지", "values": [120, 154, 171] }
+      {"name": "생명력", "type": "HP", "values": [3811, 4934, 5495] },
+      {"name": "공격력", "type": "STAT_ATK", "values": [228, 296, 329] },
+      {"name": "힘", "type": "STR", "values": [62, 80, 89] },
+      {"name": "민첩", "type": "DEX", "values": [64, 83, 92] },
+      {"name": "지능", "type": "INT", "values": [89, 114, 127] },
+      {"name": "의지", "type": "WILL", "values": [120, 154, 171] }
     ],
     "buffs": [
       {
         "trigger": "ultimate",
-        "name": "아츠취약",
+        "name": "아츠 취약",
+        "type": "ARTS_VULN",
         "target": "파티",
         "value": [18, 18, 18, 22, 22, 22, 26, 26, 26, 30, 30, 30]
       }
@@ -130,7 +131,8 @@
     "conditional-buffs": [
       {
         "trigger": "ultimate-방어불능",
-        "name": "아츠취약",
+        "name": "아츠 취약",
+        "type": "ARTS_VULN",
         "target": "파티",
         "value": [1.75, 1.75, 1.75, 2.25, 2.25, 2.25, 2.5, 2.5, 2.5, 3, 3, 3]
       }

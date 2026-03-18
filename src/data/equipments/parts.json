@@ -7,11 +7,11 @@
         "name": "식양의 숨결 보조 어깨",
         "image": "/images/equipments/parts/식양의 숨결 보조 어깨.png",
         "stats": [
-          {"name": "의지", "values": [32, 35, 38, 41] },
-          {"name": "지능", "values": [21, 23, 25, 27] }
+          {"name": "의지", "type": "WILL", "values": [32, 35, 38, 41] },
+          {"name": "지능", "type": "INT", "values": [21, 23, 25, 27] }
         ],
         "options": [
-          {"name": "궁극기 충전 효율", "values": [24.6, 27.1, 29.6, 32] }
+          {"name": "궁극기 충전 효율", "type": "ULTMATE_CHARGE", "values": [24.6, 27.1, 29.6, 32] }
         ]
       },
       {
@@ -19,11 +19,11 @@
         "name": "식양의 숨결 충전 코어 · I",
         "image": "/images/equipments/parts/식양의 숨결 충전 코어 · I.png",
         "stats": [
-          {"name": "지능", "values": [32, 35, 38, 41] },
-          {"name": "의지", "values": [21, 23, 25, 27] }
+          {"name": "지능", "type": "INT", "values": [32, 35, 38, 41] },
+          {"name": "의지", "type": "WILL", "values": [21, 23, 25, 27] }
         ],
         "options": [
-          {"name": "치유 효율 보너스", "values": [20.7, 22.8, 24.8, 26.9] }
+          {"name": "치유 효율 보너스", "type": "HEAL", "values": [20.7, 22.8, 24.8, 26.9] }
         ]
       },
       {
@@ -31,11 +31,11 @@
         "name": "식양의 숨결 충전 코어",
         "image": "/images/equipments/parts/식양의 숨결 충전 코어.png",
         "stats": [
-          {"name": "지능", "values": [32, 35, 38, 41] },
-          {"name": "힘", "values": [21, 23, 25, 27] }
+          {"name": "지능", "type": "INT", "values": [32, 35, 38, 41] },
+          {"name": "힘", "type": "STR", "values": [21, 23, 25, 27] }
         ],
         "options": [
-          {"name": "치유 효율 보너스", "values": [24.6, 27.1, 29.6, 32] }
+          {"name": "치유 효율 보너스", "type": "HEAL", "values": [24.6, 27.1, 29.6, 32] }
         ]
       }
     ]
@@ -48,11 +48,11 @@
         "name": "탁류 화염 절단기",
         "image": "/images/equipments/parts/탁류 화염 절단기.png",
         "stats": [
-          {"name": "지능", "values": [32, 35, 38, 41] },
-          {"name": "힘", "values": [21, 23, 25, 27] }
+          {"name": "지능", "type": "INT", "values": [32, 35, 38, 41] },
+          {"name": "힘", "type": "STR", "values": [21, 23, 25, 27] }
         ],
         "options": [
-          {"name": "일반 공격 피해 보너스", "values": [27.6, 30.4, 33.1, 35.9] }
+          {"name": "일반 공격 피해 보너스", "type": "NORMAL_DMG", "values": [27.6, 30.4, 33.1, 35.9] }
         ]
       },
       {
@@ -60,11 +60,77 @@
         "name": "현하 산소 공급 장치",
         "image": "/images/equipments/parts/현하 산소 공급 장치.png",
         "stats": [
-          {"name": "지능", "values": [32, 35, 38, 41] },
-          {"name": "힘", "values": [21, 23, 25, 27] }
+          {"name": "지능", "type": "INT", "values": [32, 35, 38, 41] },
+          {"name": "힘", "type": "STR", "values": [21, 23, 25, 27] }
         ],
         "options": [
-          {"name": "냉기와 전기 피해 보너스", "values": [23, 25.3, 27.6, 29.9] }
+          {"name": "냉기 피해 보너스", "type": "ICE_DMG", "values": [23, 25.3, 27.6, 29.9] },
+          {"name": "전기 피해 보너스", "type": "ELECTRIC_DMG", "values": [23, 25.3, 27.6, 29.9] }
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "응룡 50식",
+    "equips": [
+      {
+        "id": "part-5",
+        "name": "응룡 50식 탐지기 · II",
+        "image": "/images/equipments/parts/응룡 50식 탐지기 · II.png",
+        "stats": [
+          {"name": "민첩", "type": "DEX", "values": [32, 35, 38, 41] },
+          {"name": "지능", "type": "INT", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "연계 스킬 피해 보너스", "type": "COMBO_DMG", "values": [41.4, 45.5, 49.7, 53.8] }
+        ]
+      },
+      {
+        "id": "part-6",
+        "name": "응룡 50식 탐지기 · I",
+        "image": "/images/equipments/parts/응룡 50식 탐지기 · I.png",
+        "stats": [
+          {"name": "민첩", "type": "DEX", "values": [32, 35, 38, 41] },
+          {"name": "힘", "type": "STR", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "궁극기 피해 보너스", "type": "ULTIMATE_DMG", "values": [51.7, 56.9, 62.1, 67.3] }
+        ]
+      },
+      {
+        "id": "part-7",
+        "name": "응룡 50식 탐지기",
+        "image": "/images/equipments/parts/응룡 50식 탐지기.png",
+        "stats": [
+          {"name": "힘", "type": "STR", "values": [32, 35, 38, 41] },
+          {"name": "의지", "type": "WILL", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "궁극기 피해 보너스", "type": "ULTIMATE_DMG", "values": [23, 25.3, 27.6, 29.9] }
+        ]
+      },
+      {
+        "id": "part-8",
+        "name": "응룡 50식 단검 · I",
+        "image": "/images/equipments/parts/응룡 50식 단검 · I.png",
+        "stats": [
+          {"name": "지능", "type": "INT", "values": [32, 35, 38, 41] },
+          {"name": "힘", "type": "STR", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "모든 스킬 피해 보너스", "type": "SKILL_DMG", "values": [27.6, 30.4, 33.1, 35.9] }
+        ]
+      },
+      {
+        "id": "part-9",
+        "name": "응룡 50식 단검",
+        "image": "/images/equipments/parts/응룡 50식 단검.png",
+        "stats": [
+          {"name": "의지", "type": "WILL", "values": [32, 35, 38, 41] },
+          {"name": "민첩", "type": "DEX", "values": [21, 23, 25, 27] }
+        ],
+        "options": [
+          {"name": "연계 스킬 피해 보너스", "type": "COMBO_DMG", "values": [41.4, 45.5, 49.7, 53.8] }
         ]
       }
     ]

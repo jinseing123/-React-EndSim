@@ -34,7 +34,7 @@
             "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
           },
           {
-            "type": "ULTI_DAMAGE",
+            "type": "ULTIMATE_DMG",
             "label": "궁극기 피해",
             "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
           }
@@ -59,27 +59,27 @@
         ]
       },
       {
-        "optionName": "관통력 증가",
+        "optionName": "치명타 확률 증가 · 대",
         "effects": [
           {
-            "type": "PENETRATION",
-            "label": "방어 관통",
-            "values": [8, 16, 24, 32, 40, 48, 56, 64, 80]
+            "type": "CRIT_CHANCE",
+            "label": "치명타 확률",
+            "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
           }
         ]
       },
       {
-        "optionName": "사격 강화",
+        "optionName": "골절",
         "effects": [
           {
-            "type": "RANGE_DAMAGE",
-            "label": "원거리 피해",
-            "values": [10, 20, 30, 40, 50, 60, 70, 80, 100]
+            "type": "CRIT_CHANCE",
+            "label": "치명타 확률",
+            "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
           },
           {
-            "type": "ATK_SPEED",
-            "label": "공격 속도",
-            "values": [3, 6, 9, 12, 15, 18, 21, 24, 30]
+            "type": "ULTIMATE_DMG",
+            "label": "궁극기 피해",
+            "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
           }
         ]
       }
