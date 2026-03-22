@@ -170,33 +170,33 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
               {/* 4열: 공격력 + 4종 2x2 */}
               {character ? (
 
-                  <div className="flex-1 min-w-0 flex gap-2 py-3">
-                    {/* 공격력 박스: 이 w-[35%] 값으로 가로 비율 조절 */}
-                    <div className="border-zinc-700 bg-secondary/50 rounded border p-3.5 flex items-center gap-2.5 w-[40%] shrink-0">
-                      <img src="/images/icons/스탯/공격력.png" alt="공격력" className="bg-accent rounded w-17 h-17 object-contain shrink-0" />
-                      <div className="px-1.5 flex flex-col justify-center min-w-0">
-                        <div className="py-0.5 flex items-center">
-                          <span className="text-[13px] font-bold text-zinc-400">공격력</span>
-                        </div>
-                        <div className="py-1 flex items-center">
-                          <span className="text-[20px] font-bold tabular-nums leading-tight">
-                            {getStatValue('공격력', member.operatorLevel)}
-                          </span>
-                        </div>
+                <div className="flex-1 min-w-0 flex gap-2 py-3">
+                  {/* 공격력 박스: 이 w-[35%] 값으로 가로 비율 조절 */}
+                  <div className="border-zinc-700 bg-secondary/50 rounded border p-3.5 flex items-center gap-2.5 w-[40%] shrink-0">
+                    <img src="/images/icons/스탯/공격력.png" alt="공격력" className="bg-accent rounded w-17 h-17 object-contain shrink-0" />
+                    <div className="px-1.5 flex flex-col justify-center min-w-0">
+                      <div className="py-0.5 flex items-center">
+                        <span className="text-[13px] font-bold text-zinc-400">공격력</span>
+                      </div>
+                      <div className="py-1 flex items-center">
+                        <span className="text-[20px] font-bold tabular-nums leading-tight">
+                          {getStatValue('공격력', member.operatorLevel)}
+                        </span>
                       </div>
                     </div>
-                    {/* 4종 박스: 공격력 박스의 나머지 공간을 균등하게 채움 */}
-                    <div className="flex-1 grid grid-cols-2 gap-2">
-                      {(['힘', '민첩', '지능', '의지'] as const).map((statName) => (
-                        <div key={statName} className="border-zinc-700 bg-secondary/50 rounded border p-2 flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-1.5 min-w-0">
-                            <img src={`/images/icons/스탯/${statName}.png`} alt={statName} className="bg-accent rounded w-9 h-9 object-contain shrink-0" />
-                            <span className="text-xs text-zinc-400 truncate">{statName}</span>
-                          </div>
-                          <span className="px-1 text-sm font-bold tabular-nums shrink-0">{getStatValue(statName, member.operatorLevel)}</span>
+                  </div>
+                  {/* 4종 박스: 공격력 박스의 나머지 공간을 균등하게 채움 */}
+                  <div className="flex-1 grid grid-cols-2 gap-2">
+                    {(['힘', '민첩', '지능', '의지'] as const).map((statName) => (
+                      <div key={statName} className="border-zinc-700 bg-secondary/50 rounded border p-2 flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <img src={`/images/icons/스탯/${statName}.png`} alt={statName} className="bg-accent rounded w-9 h-9 object-contain shrink-0" />
+                          <span className="text-xs text-zinc-400 truncate">{statName}</span>
                         </div>
-                      ))}
-                    </div>
+                        <span className="px-1 text-sm font-bold tabular-nums shrink-0">{getStatValue(statName, member.operatorLevel)}</span>
+                      </div>
+                    ))}
+                  </div>
 
                 </div>
               ) : (
@@ -204,6 +204,46 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                   캐릭터를 선택하세요
                 </div>
               )}
+            </div>
+
+            {/* 스킬 레벨 선택자 - 1행 4열 */}
+            <div className="grid grid-cols-4 gap-2">
+              {(['일반', '배틀', '연계', '궁극기'] as const).map((skillName, sIdx) => (
+                <div key={sIdx} className="flex items-center gap-1 bg-secondary/30 p-2 rounded border border-zinc-800">
+                  <div
+                    className="w-10 h-10 flex items-center justify-center rounded-full border-[2px] overflow-hidden shrink-0"
+                    style={{
+                      backgroundColor: character?.images?.skillColor || '#444',
+                      borderColor: 'rgba(255,255,255,0.8)',
+                    }}
+                  >
+                    {character ? (
+                      <img
+                        src={[character.images.normal, character.images.battle, character.images.combo, character.images.ultimate][sIdx]}
+                        alt={skillName}
+                        className="w-[85%] h-[85%] object-contain"
+                      />
+                    ) : (
+                      <span className="text-[10px] text-zinc-400">{" "}</span>
+                    )}
+                  </div>
+                  <span className="px-1 text-[12px] text-zinc-400">{skillName}</span>
+                  <div className="ml-auto shrink-0">
+                    <CustomSelect
+                      value={member.skillLevels[sIdx]}
+                      options={Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: String(i + 1) }))}
+                      onChange={(v) => {
+                        const newParty = [...partyMembers];
+                        const newLevels: [number, number, number, number] = [...newParty[memberIndex].skillLevels];
+                        newLevels[sIdx] = Number(v);
+                        newParty[memberIndex] = { ...newParty[memberIndex], skillLevels: newLevels };
+                        onUpdate(newParty);
+                      }}
+                      className="text-[10px]"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* 장비 그리드 */}
@@ -256,7 +296,10 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                           <span className="py-1 text-[10px] text-zinc-400 font-bold flex-1">
                             {eq.data.options[0].name}{" "}
                             <span className="text-zinc-200">
-                              +{eq.data.options[0].values[member.equipmentForge[eq.key].option]}%
+                              +{eq.data.options[0].values[member.equipmentForge[eq.key].option]}
+                            </span>
+                            <span className="text-zinc-200">
+                              {eq.data.options[0].type !== 'ARTS_INTENSITY' && '%'}
                             </span>
                           </span>
                           <CustomSelect
@@ -307,7 +350,10 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                               <span key={ei} className="text-[10px] text-zinc-300 leading-5">
                                 {effect.name}{" "}
                                 <span className="font-bold text-amber-300">
-                                  +{effect.value}%
+                                  +{effect.value}
+                                </span>
+                                <span className="font-bold text-amber-300">
+                                  {effect.type !== 'ARTS_INTENSITY' && '%'}
                                 </span>
                                 {ei < opt.effects.length - 1 && (
                                   <span className="text-zinc-600 mx-1">·</span>
@@ -350,15 +396,15 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                   </div>
                   <div className="space-y-1 border-t border-zinc-700/60 pt-1.5">
                     {weaponData.options.map((option, idx) => (
-                      <div key={idx} className="grid grid-cols-[1fr_auto] items-center gap-2">
+                      <div key={idx} className="py-0.5 grid grid-cols-[1fr_auto] items-center gap-2">
                         <div className="min-w-0">
-                          <span className="text-[10px] text-zinc-500 block truncate">{option.optionName}</span>
-                          <div className="flex flex-wrap gap-x-2">
+                          <span className="text-[11px] font-bold text-zinc-200 block truncate">{option.optionName}</span>
+                          <div className="flex flex-col gap-x-2">
                             {option.effects.map((effect, effIdx) => (
-                              <span key={effIdx} className="text-[11px] font-bold text-zinc-200">
+                              <span key={effIdx} className="text-[10px] text-zinc-500 font-bold">
                                 {effect.label}{" "}
                                 <span className="text-primary">
-                                  +{effect.values[member.temperaments[idx] - 1]}{effect.type.includes('CHANCE') || effect.type.includes('DAMAGE') ? '%' : ''}
+                                  +{effect.values[member.temperaments[idx] - 1]}{effect.type.includes('ARTS_INTENSITY') ? '' : '%'}
                                 </span>
                               </span>
                             ))}

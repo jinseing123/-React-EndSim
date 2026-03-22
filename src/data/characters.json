@@ -10,9 +10,11 @@
       "combo": "./images/characters/레바테인/스킬/combo.png",
       "ultimate": "./images/characters/레바테인/스킬/ultimate.png"
     },
+    "main-stat": {"name": "지능", "type": "INT"},
+    "sub-stat": {"name": "힘", "type": "STR"},
     "stats": [
       {"name": "생명력", "type": "HP", "values": [3811, 4934, 5495] },
-      {"name": "공격력", "type": "STAT_ATK", "values": [221, 285, 318] },
+      {"name": "공격력", "type": "OPERATOR_ATK", "values": [221, 285, 318] },
       {"name": "힘", "type": "STR", "values": [85, 109, 121] },
       {"name": "민첩", "type": "DEX", "values": [69, 89, 99] },
       {"name": "지능", "type": "INT", "values": [125, 160, 177] },
@@ -105,15 +107,17 @@
     "name": "질베르타",
     "images": {
       "profile": "./images/characters/질베르타/프로필.png",
-      "skillColor": "#FF623D",
+      "skillColor": "#9EDC23",
       "normal": "./images/characters/질베르타/스킬/normal.png",
       "battle": "./images/characters/질베르타/스킬/battle.png",
       "combo": "./images/characters/질베르타/스킬/combo.png",
       "ultimate": "./images/characters/질베르타/스킬/ultimate.png"
     },
+    "main-stat": {"name": "의지", "type": "WILL"},
+    "sub-stat": {"name": "지능", "type": "INT"},
     "stats": [
       {"name": "생명력", "type": "HP", "values": [3811, 4934, 5495] },
-      {"name": "공격력", "type": "STAT_ATK", "values": [228, 296, 329] },
+      {"name": "공격력", "type": "OPERATOR_ATK", "values": [228, 296, 329] },
       {"name": "힘", "type": "STR", "values": [62, 80, 89] },
       {"name": "민첩", "type": "DEX", "values": [64, 83, 92] },
       {"name": "지능", "type": "INT", "values": [89, 114, 127] },

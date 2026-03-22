@@ -1,42 +1,53 @@
 [
   {
     "id": "weapon-1",
-    "name": "멸망의 그림자 검",
-    "image": "/images/weapons/shadow_sword.png",
-    "attack": 1500,
+    "name": "백야의 별",
+    "type": "ONE_HAND_SWORD",
+    "image": "/images/weapons/백야의 별.png",
+    "attack": 505,
     "options": [
       {
-        "optionName": "힘 증가 · 대",
+        "optionName": "주요 능력치 증가 · 대",
         "effects": [
           {
-            "type": "STR",
-            "label": "힘",
-            "values": [10, 20, 30, 40, 50, 60, 70, 80, 90]
+            "target": "자신",
+            "type": "MAIN_STAT",
+            "label": "주요 능력치",
+            "values": [ 17, 30, 44, 57, 71, 85, 98, 112, 132 ]
           }
         ]
       },
       {
-        "optionName": "치명타 확률 증가 · 대",
+        "optionName": "오리지늄 아츠 강도 증가 · 대",
         "effects": [
           {
-            "type": "CRIT_CHANCE",
-            "label": "치명타 확률",
-            "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
+            "target": "자신",
+            "type": "ARTS_INTENSITY",
+            "label": "오리지늄 아츠 강도",
+            "values": [ 10, 18, 26, 34, 42, 50, 58, 66, 78 ]
           }
         ]
       },
       {
-        "optionName": "골절",
+        "optionName": "고통 · 백야의 별",
         "effects": [
           {
-            "type": "CRIT_CHANCE",
-            "label": "치명타 확률",
-            "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
+            "target": "자신",
+            "type": "ARTS_DMG",
+            "label": "아츠 피해",
+            "values": [ 12, 14.4, 16.8, 19.2, 21.6, 24, 28.8, 33.6 ]
           },
           {
-            "type": "ULTIMATE_DMG",
-            "label": "궁극기 피해",
-            "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
+            "target": "자신",
+            "type": "ARTS_DMG",
+            "label": "장착자가 적에게 연소 혹은 감전을 부여했을 때, 아츠 피해",
+            "values": [ 12, 14.4, 16.8, 19.2, 21.6, 24, 28.8, 33.6 ]
+          },
+          {
+            "target": "자신",
+            "type": "ARTS_INTENSITY",
+            "label": "장착자가 적에게 연소 혹은 감전을 부여했을 때, 오리지늄 아츠 강도",
+            "values": [ 25, 30, 35, 40, 45, 50, 55, 60, 70 ]
           }
         ]
       }
@@ -44,17 +55,121 @@
   },
   {
     "id": "weapon-2",
-    "name": "천공의 활",
-    "image": "/images/weapons/sky_bow.png",
-    "attack": 1200,
+    "name": "위대한 이름",
+    "type": "ONE_HAND_SWORD",
+    "image": "/images/weapons/위대한 이름.png",
+    "attack": 490,
     "options": [
       {
-        "optionName": "민첩 증가 · 대",
+        "optionName": "주요 능력치 증가 · 대",
         "effects": [
           {
-            "type": "DEX",
-            "label": "민첩",
-            "values": [12, 24, 36, 48, 60, 72, 84, 96, 108]
+            "target": "자신",
+            "type": "MAIN_STAT",
+            "label": "주요 능력치",
+            "values": [ 17, 30, 44, 57, 71, 85, 98, 112, 132 ]
+          }
+        ]
+      },
+      {
+        "optionName": "물리 피해 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "PHYSICAL_DMG",
+            "label": "물리 피해",
+            "values": [ 5.56, 10, 14.44, 18.89, 23.33, 27.78, 32.22, 36.67, 43.33 ]
+          }
+        ]
+      },
+      {
+        "optionName": "잔혹 · 엄격한 규율",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "ATK_PERCENT",
+            "label": "공격력",
+            "values": [ 10, 12, 14, 16, 18, 20, 22, 24, 28 ]
+          },
+          {
+            "target": "자신",
+            "type": "ATK_PERCENT",
+            "label": "방어불능 4스택 소모 시 자신의 공격력",
+            "values": [ 15, 18, 21, 24, 27, 30, 33, 36, 42 ]
+          },
+          {
+            "target": "자신을 제외한 파티",
+            "type": "ATK_PERCENT",
+            "label": "방어불능 4스택 소모 시 팀 내 다른 오퍼레이터의 공격력",
+            "values": [ 7.5, 9, 10.5, 12, 13.5, 15, 16.5, 18, 21 ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weapon-3",
+    "name": "테르밋 커터",
+    "type": "ONE_HAND_SWORD",
+    "image": "/images/weapons/테르밋 커터.png",
+    "attack": 490,
+    "options": [
+      {
+        "optionName": "의지 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "WILL",
+            "label": "의지",
+            "values": [ 20, 36, 52, 68, 84, 100, 116, 132, 156 ]
+          }
+        ]
+      },
+      {
+        "optionName": "공격력 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "ATK_PERCENT",
+            "label": "공격력",
+            "values": [ 5, 9, 13, 17, 21, 25, 29, 33, 39 ]
+          }
+        ]
+      },
+      {
+        "optionName": "흐름 · 고열 방출",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "ATK_PERCENT",
+            "label": "공격력",
+            "values": [ 10, 12, 14, 16, 18, 20, 22, 24, 28 ]
+          },
+          {
+            "target": "파티",
+            "type": "ATK_PERCENT",
+            "label": "(2스택 기준) 장착자가 자신의 스킬로 스킬 게이지를 회복하거나 자신의 스킬로 연타 상태를 획득했을 때, 팀 전체의 공격력",
+            "values": [ 10, 12, 14, 16, 18, 20, 22, 24, 28 ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weapon-4",
+    "name": "부요",
+    "type": "ONE_HAND_SWORD",
+    "image": "/images/weapons/부요.png",
+    "attack": 495,
+    "options": [
+      {
+        "optionName": "주요 능력치 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "MAIN_STAT",
+            "label": "주요 능력치",
+            "values": [ 17, 30, 44, 57, 71, 85, 98, 112, 132 ]
           }
         ]
       },
@@ -62,27 +177,295 @@
         "optionName": "치명타 확률 증가 · 대",
         "effects": [
           {
+            "target": "자신",
             "type": "CRIT_CHANCE",
             "label": "치명타 확률",
-            "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
+            "values": [ 2.5, 4.5, 6.5, 8.5, 10.5, 12.5, 14.5, 16.5, 19.5 ]
           }
         ]
       },
       {
-        "optionName": "골절",
+        "optionName": "어둠 · 청운",
         "effects": [
           {
-            "type": "CRIT_CHANCE",
-            "label": "치명타 확률",
-            "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
+            "target": "자신",
+            "type": "BATTLE_PHYSICAL_DMG",
+            "label": "배틀 스킬 물리 피해",
+            "values": [ 15, 18, 21, 24, 27, 30, 33, 36, 42 ]
           },
           {
+            "target": "자신",
+            "type": "ULTIMATE_PHYSICAL_DMG",
+            "label": "궁극기 물리 피해",
+            "values": [ 15, 18, 21, 24, 27, 30, 33, 36, 42 ]
+          },
+          {
+            "target": "자신",
+            "type": "STAGGER_DMG",
+            "label": "불균형 상태의 적에게 주는 피해",
+            "values": [ 35, 42, 49, 56, 63, 70, 77, 84, 98 ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weapon-5",
+    "name": "끝없는 방랑",
+    "type": "ONE_HAND_SWORD",
+    "image": "/images/weapons/끝없는 방랑.png",
+    "attack": 500,
+    "options": [
+      {
+        "optionName": "의지 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "WILL",
+            "label": "의지",
+            "values": [ 20, 36, 52, 68, 84, 100, 116, 132, 156 ]
+          }
+        ]
+      },
+      {
+        "optionName": "공격력 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "ATK_PERCENT",
+            "label": "공격력",
+            "values": [ 5, 9, 13, 17, 21, 25, 29, 33, 39 ]
+          }
+        ]
+      },
+      {
+        "optionName": "흐름 · 윤회",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "PHYSICAL_DMG",
+            "label": "물리 피해",
+            "values": [ 16, 19.2, 22.4, 25.6, 28.8, 32, 35.2, 38.4, 44.8 ]
+          },
+          {
+            "target": "자신",
+            "type": "PHYSICAL_DMG",
+            "label": "(5스택 기준) 스킬 게이지 회복 시 자신의 물리 피해",
+            "values": [ 25, 30, 35, 40, 45, 50, 55, 60, 70 ]
+          },
+          {
+            "target": "자신을 제외한 파티",
+            "type": "PHYSICAL_DMG",
+            "label": "(5스택 기준) 스킬 게이지 회복 시 팀 내 다른 오퍼레이터의 물리 피해",
+            "values": [ 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30, 35 ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weapon-6",
+    "name": "장대한 염원",
+    "type": "ONE_HAND_SWORD",
+    "image": "/images/weapons/장대한 염원.png",
+    "attack": 500,
+    "options": [
+      {
+        "optionName": "민첩 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "DEX",
+            "label": "민첩",
+            "values": [ 20, 36, 52, 68, 84, 100, 116, 132, 156 ]
+          }
+        ]
+      },
+      {
+        "optionName": "공격력 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "ATK_PERCENT",
+            "label": "공격력",
+            "values": [ 5, 9, 13, 17, 21, 25, 29, 33, 39 ]
+          }
+        ]
+      },
+      {
+        "optionName": "고통 · 간절한 소망",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "ARTS_INTENSITY",
+            "label": "오리지늄 아츠 강도",
+            "values": [ 30, 36, 42, 48, 54, 60, 66, 72, 84 ]
+          },
+          {
+            "target": "자신",
+            "type": "BATTLE_PHYSICAL_DMG",
+            "label": "오리지늄 결정 또는 동결 부여 시 배틀 스킬 물리 피해",
+            "values": [ 36, 43.2, 50.4, 57.6, 64.8, 72, 79.2, 86.4, 100.8 ]
+          },
+          {
+            "target": "자신",
+            "type": "ULTIMATE_PHYSICAL_DMG",
+            "label": "오리지늄 결정 또는 동결 부여 시 궁극기 물리 피해",
+            "values": [ 36, 43.2, 50.4, 57.6, 64.8, 72, 79.2, 86.4, 100.8 ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weapon-7",
+    "name": "용조의 불꽃",
+    "type": "ONE_HAND_SWORD",
+    "image": "/images/weapons/용조의 불꽃.png",
+    "attack": 510,
+    "options": [
+      {
+        "optionName": "지능 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "INT",
+            "label": "지능",
+            "values": [ 20, 36, 52, 68, 84, 100, 116, 132, 156 ]
+          }
+        ]
+      },
+      {
+        "optionName": "공격력 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "ATK_PERCENT",
+            "label": "공격력",
+            "values": [ 5, 9, 13, 17, 21, 25, 29, 33, 39 ]
+          }
+        ]
+      },
+      {
+        "optionName": "어둠 · 울부짖는 불길",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "FIRE_DMG",
+            "label": "열기 피해",
+            "values": [ 16, 19.2, 22.4, 25.6, 28.8, 32, 35.2, 38.4, 44.8 ]
+          },
+          {
+            "target": "자신",
+            "type": "NORMAL_DMG",
+            "label": "궁극기 사용 시 일반 공격 피해",
+            "values": [ 75, 90, 105, 120, 135, 150, 165, 180, 210 ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weapon-8",
+    "name": "암흑의 횃불",
+    "type": "ONE_HAND_SWORD",
+    "image": "/images/weapons/암흑의 횃불.png",
+    "attack": 490,
+    "options": [
+      {
+        "optionName": "지능 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "INT",
+            "label": "지능",
+            "values": [ 20, 36, 52, 68, 84, 100, 116, 132, 156 ]
+          }
+        ]
+      },
+      {
+        "optionName": "열기 피해 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "FIRE_DMG",
+            "label": "열기 피해",
+            "values": [ 5.56, 10, 14.44, 18.89, 23.33, 27.78, 32.22, 36.67, 43.33 ]
+          }
+        ]
+      },
+      {
+        "optionName": "고통 · 쌓이는 탐욕",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "ATK_PERCENT",
+            "label": "공격력",
+            "values": [ 7, 8.4, 9.8, 11.2, 12.6, 14, 15.4, 16.8, 19.6 ]
+          },
+          {
+            "target": "자신",
+            "type": "FIRE_DMG",
+            "label": "(2스택 기준) 연소 또는 부식 부여 시 열기 피해",
+            "values": [ 16, 19.2, 22.4, 25.6, 28.8, 32, 35.2, 38.4, 44.8 ]
+          },
+          {
+            "target": "자신",
+            "type": "NATURE_DMG",
+            "label": "(2스택 기준) 연소 또는 부식 부여 시 자연 피해",
+            "values": [ 16, 19.2, 22.4, 25.6, 28.8, 32, 35.2, 38.4, 44.8 ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "weapon-9",
+    "name": "찬란했던 기억",
+    "type": "ONE_HAND_SWORD",
+    "image": "/images/weapons/찬란했던 기억.png",
+    "attack": 490,
+    "options": [
+      {
+        "optionName": "민첩 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "DEX",
+            "label": "민첩",
+            "values": [ 20, 36, 52, 68, 84, 100, 116, 132, 156 ]
+          }
+        ]
+      },
+      {
+        "optionName": "치명타 확률 증가 · 대",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "CRIT_CHANCE",
+            "label": "치명타 확률",
+            "values": [ 2.5, 4.5, 6.5, 8.5, 10.5, 12.5, 14.5, 16.5, 19.5 ]
+          }
+        ]
+      },
+      {
+        "optionName": "어둠 · 사라지지 않은 여광",
+        "effects": [
+          {
+            "target": "자신",
+            "type": "ATK_PERCENT",
+            "label": "공격력",
+            "values": [ 7, 8.4, 9.8, 11.2, 12.6, 14, 15.4, 16.8, 19.6 ]
+          },
+          {
+            "target": "자신",
             "type": "ULTIMATE_DMG",
-            "label": "궁극기 피해",
-            "values": [5, 10, 15, 20, 25, 30, 35, 40, 50]
+            "label": "(3스택 기준) 방어불능 부여 시 궁극기 피해",
+            "values": [ 36, 43.2, 50.4, 57.6, 64.8, 72, 79.2, 86.4, 100.8 ]
           }
         ]
       }
     ]
   }
+
 ]

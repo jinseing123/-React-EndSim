@@ -32,7 +32,7 @@
       {
         "target": "자신",
         "effects": [
-          { "name": "공격력", "type": "EQUIP_ATK", "value": 15},
+          { "name": "공격력", "type": "ATK_PERCENT", "value": 15},
           { "name": "연계 스킬 피해", "type": "COMBO_DMG", "value": 60}
         ]
       }
@@ -47,7 +47,7 @@
         "target": "자신",
         "effects": [
           { "name": "치명타 확률", "type": "CRIT_CHANCE", "value": 10},
-          { "name": "공격력", "type": "EQUIP_ATK", "value": 25}
+          { "name": "공격력", "type": "ATK_PERCENT", "value": 25}
         ]
       }
     ],
@@ -109,7 +109,7 @@
       {
         "target": "자신",
         "effects": [
-          { "name": "공격력", "type": "EQUIP_ATK", "value": 15},
+          { "name": "공격력", "type": "ATK_PERCENT", "value": 15},
           { "name": "배틀 스킬 피해", "type": "BATTLE_DMG", "value": 60}
         ]
       }
@@ -123,7 +123,7 @@
       {
         "target": "자신",
         "effects": [
-          { "name": "공격력", "type": "EQUIP_ATK", "value": 8},
+          { "name": "공격력", "type": "ATK_PERCENT", "value": 8},
           { "name": "물리 피해", "type": "PHYSIC_DMG", "value": 48}
         ]
       }

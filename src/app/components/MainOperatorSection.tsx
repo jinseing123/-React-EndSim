@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import CustomSelect from './CustomSelect';
 import charactersData from '../../data/characters.json';
 
@@ -19,18 +18,39 @@ interface OperatorData {
   foodId: string | null;
 }
 
+interface BattleContext {
+  imbalanceState: boolean;
+  defenseBreak: number;
+  artsType: number;
+  artsLevel: number;
+  artsAbnormalType: number | null;
+  artsAbnormalParty: number;
+}
+
+interface FinalStats {
+  str: number;
+  dex: number;
+  int: number;
+  wil: number;
+  artsIntensity: number;
+  critChance: number;
+}
+
 interface MainOperatorSectionProps {
   operatorData: OperatorData;
+  battleContext: BattleContext;
+  onBattleContextChange: (ctx: BattleContext) => void;
+  finalAtk: number;
+  finalStats: FinalStats;
   onOpenModal: (type: string, target: string) => void;
 }
 
-export default function MainOperatorSection({ operatorData, onOpenModal }: MainOperatorSectionProps) {
-  const [imbalanceState, setImbalanceState] = useState(false);
-  const [defenseBreak, setDefenseBreak] = useState(0);
-  const [artsType, setArtsType] = useState(0);
-  const [artsLevel, setArtsLevel] = useState(0);
-  const [artsAbnormalType, setArtsAbnormalType] = useState<number | null>(null);
-  const [artsAbnormalParty, setArtsAbnormalParty] = useState(0);
+export default function MainOperatorSection({ operatorData, battleContext, onBattleContextChange, finalAtk, finalStats, onOpenModal }: MainOperatorSectionProps) {
+  const { imbalanceState, defenseBreak, artsType, artsLevel, artsAbnormalType, artsAbnormalParty } = battleContext;
+
+  // battleContext의 단일 필드만 바꾸는 헬퍼
+  const set = <K extends keyof BattleContext>(key: K, value: BattleContext[K]) =>
+    onBattleContextChange({ ...battleContext, [key]: value });
 
   const character = charactersData.find(c => c.id === operatorData.characterId) || charactersData[0];
 
@@ -40,19 +60,19 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
   };
 
   const primaryStats = [
-    { name: '공격력', value: getStatValue('공격력', operatorData.operatorLevel), icon: '/images/icons/스탯/공격력.png' },
+    { name: '공격력', value: finalAtk, icon: '/images/icons/스탯/공격력.png' },
   ];
 
   const secondaryStats = [
-    { name: '힘', value: getStatValue('힘', operatorData.operatorLevel), icon: '/images/icons/스탯/힘.png' },
-    { name: '민첩', value: getStatValue('민첩', operatorData.operatorLevel), icon: '/images/icons/스탯/민첩.png' },
-    { name: '지능', value: getStatValue('지능', operatorData.operatorLevel), icon: '/images/icons/스탯/지능.png' },
-    { name: '의지', value: getStatValue('의지', operatorData.operatorLevel), icon: '/images/icons/스탯/의지.png' },
+    { name: '힘',  value: finalStats.str, icon: '/images/icons/스탯/힘.png' },
+    { name: '민첩', value: finalStats.dex, icon: '/images/icons/스탯/민첩.png' },
+    { name: '지능', value: finalStats.int, icon: '/images/icons/스탯/지능.png' },
+    { name: '의지', value: finalStats.wil, icon: '/images/icons/스탯/의지.png' },
   ];
 
   const extraStats = [
-    { name: '치명타 확률', value: 0, icon: '/images/icons/기타/치명타.png' },
-    { name: '아츠 강도', value: 0, icon: '/images/icons/기타/아츠강도.png' },
+    { name: '치명타 확률', value: finalStats.critChance,    icon: '/images/icons/기타/치명타.png' },
+    { name: '아츠 강도',  value: finalStats.artsIntensity, icon: '/images/icons/기타/아츠강도.png' },
   ];
 
   const skillCategories = [
@@ -208,7 +228,7 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">불균형 상태</span>
           <button
-            onClick={() => setImbalanceState(!imbalanceState)}
+            onClick={() => set('imbalanceState', !imbalanceState)}
             className={`px-4 py-1.5 rounded text-xs font-bold transition-all ${imbalanceState ? 'bg-primary text-black' : 'bg-secondary text-zinc-400'
               }`}
           >
@@ -221,7 +241,7 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
           <CustomSelect
             value={defenseBreak}
             options={[0, 1, 2, 3, 4].map(v => ({ value: v, label: String(v) }))}
-            onChange={v => setDefenseBreak(Number(v))}
+            onChange={v => set('defenseBreak', Number(v))}
           />
         </div>
 
@@ -237,7 +257,7 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
               ].map((item, i) => (
                 <button
                   key={i}
-                  onClick={() => setArtsType(i)}
+                  onClick={() => set('artsType', i)}
                   className={`w-9 h-9 rounded-md transition-all flex items-center justify-center ${artsType === i ? 'bg-primary ring-2 ring-primary/50' : 'bg-secondary hover:bg-zinc-700'
                     }`}
                   title={item.label}
@@ -252,7 +272,7 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
             <CustomSelect
               value={artsLevel}
               options={[0, 1, 2, 3, 4].map(v => ({ value: v, label: String(v) }))}
-              onChange={v => setArtsLevel(Number(v))}
+              onChange={v => set('artsLevel', Number(v))}
             />
           </div>
         </div>
@@ -271,7 +291,7 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
               ].map((item, i) => (
                 <button
                   key={i}
-                  onClick={() => setArtsAbnormalType(artsAbnormalType === i ? null : i)}
+                  onClick={() => set('artsAbnormalType', artsAbnormalType === i ? null : i)}
                   className={`w-9 h-9 rounded-md transition-all flex items-center justify-center ${artsAbnormalType === i ? 'bg-primary ring-2 ring-primary/50' : 'bg-secondary hover:bg-zinc-700'
                     }`}
                   title={item.label}
@@ -291,7 +311,7 @@ export default function MainOperatorSection({ operatorData, onOpenModal }: MainO
                 { value: 2, label: '파티원 2' },
                 { value: 3, label: '파티원 3' },
               ]}
-              onChange={v => setArtsAbnormalParty(Number(v))}
+              onChange={v => set('artsAbnormalParty', Number(v))}
             />
           </div>
         </div>

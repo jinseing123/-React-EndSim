@@ -264,7 +264,10 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
                       <span className="py-1 text-[10px] text-zinc-400 font-bold flex-1">
                         {eq.data.options[0].name}{" "}
                         <span className="text-primary/70">
-                          +{eq.data.options[0].values[operatorData.equipmentForge[eq.key].option]}%
+                          +{eq.data.options[0].values[operatorData.equipmentForge[eq.key].option]}
+                        </span>
+                        <span className="text-primary/70">
+                          {eq.data.options[0].type !== 'ARTS_INTENSITY' && '%'}
                         </span>
                       </span>
                       <CustomSelect
@@ -322,7 +325,10 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
                         <span key={ei} className="text-[10px] text-zinc-300 leading-5">
                           {effect.name}{" "}
                           <span className="font-bold text-amber-300">
-                            +{effect.value}%
+                            +{effect.value}
+                          </span>
+                          <span className="font-bold text-amber-300">
+                            {effect.type !== 'ARTS_INTENSITY' && '%'}
                           </span>
                           {ei < opt.effects.length - 1 && (
                             <span className="text-zinc-600 mx-1">·</span>
@@ -372,15 +378,15 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
               {/* 옵션 목록 */}
               <div className="space-y-1 border-t border-zinc-700/60 pt-2">
                 {weaponData.options.map((option, idx) => (
-                  <div key={idx} className="grid grid-cols-[1fr_auto] items-center gap-2">
+                  <div key={idx} className="py-0.5 grid grid-cols-[1fr_auto] items-center gap-2">
                     <div className="min-w-0">
-                      <span className="text-[10px] text-zinc-500 block truncate">{option.optionName}</span>
-                      <div className="flex flex-wrap gap-x-2">
+                      <span className="text-[11px] font-bold text-zinc-200 block truncate">{option.optionName}</span>
+                      <div className="flex flex-col gap-x-2">
                         {option.effects.map((effect, effIdx) => (
-                          <span key={effIdx} className="text-[11px] font-bold text-zinc-200">
+                          <span key={effIdx} className="text-[10px] text-zinc-500 font-bold">
                             {effect.label}{" "}
                             <span className="text-primary">
-                              +{effect.values[operatorData.temperaments[idx] - 1]}{effect.type.includes('CHANCE') || effect.type.includes('DAMAGE') ? '%' : ''}
+                              +{effect.values[operatorData.temperaments[idx] - 1]}{effect.type.includes('ARTS_INTENSITY') ? '' : '%'}
                             </span>
                           </span>
                         ))}
@@ -402,7 +408,7 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
             </div>
           ) : (
             <div className="flex-1 bg-zinc-800/20 rounded-xl border border-dashed border-zinc-700 flex items-center justify-center text-xs text-zinc-500">
-              무기를 장착하여 전투력을 높이세요
+              무기를 장착하세요
             </div>
           )}
         </div>

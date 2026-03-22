@@ -4,7 +4,7 @@
     "name": "강력한 공격의 영약",
     "image": "/images/consumables/atk_potion.png",
     "effects": [
-      { "type": "FOOD_ATK_PLUS", "label": "공격력 증가", "value": 50 },
+      { "type": "ATK_CONST", "label": "공격력", "value": 50 },
       { "type": "CRIT_CHANCE", "label": "치명타 확률", "value": 15.5 }
     ]
   },
@@ -13,7 +13,7 @@
     "name": "스테이크",
     "image": "/images/consumables/steak.png",
     "effects": [
-      { "type": "FOOD_ATK_PERCENT", "label": "공격력", "value": 15 },
+      { "type": "ATK_PERCENT", "label": "공격력", "value": 15 },
       { "type": "CRIT_DMG", "label": "치명타 피해", "value": 20 }
     ]
   }
