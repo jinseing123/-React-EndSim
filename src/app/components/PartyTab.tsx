@@ -206,6 +206,8 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
               )}
             </div>
 
+
+
             {/* 스킬 레벨 선택자 - 1행 4열 */}
             <div className="grid grid-cols-4 gap-2">
               {(['일반', '배틀', '연계', '궁극기'] as const).map((skillName, sIdx) => (
@@ -245,6 +247,7 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                 </div>
               ))}
             </div>
+
 
             {/* 장비 그리드 */}
             <div className="grid grid-cols-4 gap-2">
@@ -432,6 +435,12 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
                 </div>
               )}
             </div>
+
+            {/* 캐릭터 설명 */}
+            <div className="flex-1 min-w-0 bg-zinc-800/50 rounded border border-zinc-700/50 p-3 space-y-2 text-[13px] text-zinc-400 whitespace-pre-line">
+              {character?.desc}
+            </div>
+
           </div>
         );
       })}

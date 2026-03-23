@@ -253,29 +253,89 @@ export function resolveOperator(
     //      - 파티원 캐릭터 buffs + conditional-buffs
     //      - 파티원 장비 세트효과
     //      - 파티원 무기 옵션 effect
+    //
+    //    중복 방지: 같은 출처(세트명, 무기id+옵션명, 캐릭터id+버프명)의 효과는
+    //    파티원 중 한 명에게서만 적용. 게임 내 "같은 이름의 효과는 중첩되지 않음" 규칙과 동일.
     // ─────────────────────────────────────────────────
+
+    // 이미 적용한 출처를 추적하는 Set
+    const appliedSources = new Set<string>();
+
     for (const member of (partyMembers ?? [])) {
         if (!member.characterId) continue;
 
         const memberChar = charactersData.find(c => c.id === member.characterId);
 
         // 파티원 캐릭터 buffs + conditional-buffs
+        // 출처 키: '캐릭터id:버프명'
         if (memberChar) {
-            applyCharacterBuffs(totals, memberChar, member.skillLevels, context, PARTY_TARGETS);
+            for (const buff of (memberChar.buffs ?? [])) {
+                if (!PARTY_TARGETS.has(buff.target as string)) continue;
+                const skillIdx = SKILL_KEY_MAP[buff.trigger as string];
+                if (skillIdx === undefined) continue;
+                const sourceKey = `char:${memberChar.id}:${buff.name}`;
+                if (appliedSources.has(sourceKey)) continue;
+                appliedSources.add(sourceKey);
+                const levelIdx = member.skillLevels[skillIdx] - 1;
+                addStat(totals, buff.type, (buff.value as number[])[levelIdx] ?? 0);
+            }
+            for (const buff of (memberChar['conditional-buffs'] ?? [])) {
+                if (!PARTY_TARGETS.has(buff.target as string)) continue;
+                const triggerParts = (buff.trigger as string).split('-');
+                if (triggerParts.length < 2) continue;
+                const sourceKey = `char:${memberChar.id}:${buff.name}`;
+                if (appliedSources.has(sourceKey)) continue;
+                appliedSources.add(sourceKey);
+                const [skillKey, ...condParts] = triggerParts;
+                const condition = condParts.join('-');
+                const skillIdx = SKILL_KEY_MAP[skillKey];
+                const getCondValue = CONDITION_VALUE_GETTER[condition];
+                if (skillIdx === undefined || getCondValue === undefined) continue;
+                const levelIdx = member.skillLevels[skillIdx] - 1;
+                const baseValue = (buff.value as number[])[levelIdx] ?? 0;
+                addStat(totals, buff.type, baseValue * getCondValue(context));
+            }
         }
 
         // 파티원 장비 세트효과
+        // 출처 키: '세트명' (같은 세트는 파티원 중 한 명만 적용)
         const mArmor = findEquip(armorsData, member.equipment.armor);
         const mGlove = findEquip(glovesData, member.equipment.glove);
         const mPart1 = findEquip(partsData, member.equipment.part1);
         const mPart2 = findEquip(partsData, member.equipment.part2);
-        applySetEffects(totals, [mArmor, mGlove, mPart1, mPart2], PARTY_TARGETS);
+
+        const mSetCountMap: Record<string, number> = {};
+        for (const item of [mArmor, mGlove, mPart1, mPart2]) {
+            if (item?.setName) mSetCountMap[item.setName] = (mSetCountMap[item.setName] || 0) + 1;
+        }
+        for (const [setName, count] of Object.entries(mSetCountMap)) {
+            if (count < 3) continue;
+            const sourceKey = `set:${setName}`;
+            if (appliedSources.has(sourceKey)) continue;
+            appliedSources.add(sourceKey);
+            const set = equipmentSetsData.find(s => s.name === setName);
+            const effects = set?.options.flatMap(opt =>
+                opt.effects.map(e => ({ target: opt.target, ...e }))
+            ) ?? [];
+            for (const effect of effects) {
+                if (PARTY_TARGETS.has(effect.target)) {
+                    addStat(totals, effect.type, effect.value);
+                }
+            }
+        }
 
         // 파티원 무기 옵션 effect
+        // 출처 키: '무기id:옵션명' (같은 무기 같은 옵션은 한 명만 적용)
         const memberWeapon = weaponsData.find(w => w.id === member.weaponId);
         if (memberWeapon) {
             memberWeapon.options.forEach((opt, optIdx) => {
-                const tempLevel = Math.max(0, (op.temperaments?.[optIdx] ?? 1) - 1);
+                const sourceKey = `weapon:${memberWeapon.id}:${opt.optionName}`;
+                if (appliedSources.has(sourceKey)) {
+                    // 이미 적용된 출처지만 기질레벨이 더 높은 파티원이 있을 수 있으므로 건너뜀
+                    return;
+                }
+                appliedSources.add(sourceKey);
+                const tempLevel = Math.max(0, (member.temperaments?.[optIdx] ?? 1) - 1);
                 for (const effect of opt.effects) {
                     if (!PARTY_TARGETS.has((effect as any).target)) continue;
                     addStat(totals, effect.type, effect.values[tempLevel] ?? 0);

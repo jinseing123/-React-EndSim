@@ -64,15 +64,15 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
   ];
 
   const secondaryStats = [
-    { name: '힘',  value: finalStats.str, icon: '/images/icons/스탯/힘.png' },
+    { name: '힘', value: finalStats.str, icon: '/images/icons/스탯/힘.png' },
     { name: '민첩', value: finalStats.dex, icon: '/images/icons/스탯/민첩.png' },
     { name: '지능', value: finalStats.int, icon: '/images/icons/스탯/지능.png' },
     { name: '의지', value: finalStats.wil, icon: '/images/icons/스탯/의지.png' },
   ];
 
   const extraStats = [
-    { name: '치명타 확률', value: finalStats.critChance,    icon: '/images/icons/기타/치명타.png' },
-    { name: '아츠 강도',  value: finalStats.artsIntensity, icon: '/images/icons/기타/아츠강도.png' },
+    { name: '치명타 확률', value: finalStats.critChance, icon: '/images/icons/기타/치명타.png' },
+    { name: '아츠 강도', value: finalStats.artsIntensity, icon: '/images/icons/기타/아츠강도.png' },
   ];
 
   const skillCategories = [
@@ -221,6 +221,11 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
             </div>
           </div>
         ))}
+      </div>
+
+      {/* 캐릭터 설명 */}
+      <div className="flex-1 min-w-0 bg-zinc-800/50 rounded border border-zinc-700/50 p-3 space-y-2 text-[13px] text-zinc-400 whitespace-pre-line">
+        {character?.desc}
       </div>
 
       {/* 하단 세팅 구역 */}
