@@ -6,36 +6,17 @@ import glovesData from '../../data/equipments/gloves.json';
 import partsData from '../../data/equipments/parts.json';
 import weaponsData from '../../data/weapons.json';
 import equipmentSetsData from '../../data/equipments/equipmentSets.json';
-
-interface OperatorData {
-  characterId: string | null;
-  operatorLevel: number;
-  breakthrough: number;
-  skillLevels: [number, number, number, number];
-  equipment: {
-    armor: string | null;
-    glove: string | null;
-    part1: string | null;
-    part2: string | null;
-  };
-  equipmentForge: {
-    armor: { stat1: number; stat2: number; option: number };
-    glove: { stat1: number; stat2: number; option: number };
-    part1: { stat1: number; stat2: number; option: number };
-    part2: { stat1: number; stat2: number; option: number };
-  };
-  weaponId: string | null;
-  temperaments: [number, number, number];
-  foodId: string | null;
-}
+import { resolveOperator } from '../../utils/resolveOperator';  // 추가
+import type { OperatorData, BattleContext } from '../../types';  // BattleContext 타입 import
 
 interface PartyTabProps {
   partyMembers: OperatorData[];
   onUpdate: (data: OperatorData[]) => void;
   onOpenModal: (type: string, target: string) => void;
+  battleContext: BattleContext;  // 추가: 전투 컨텍스트 전달받음
 }
 
-export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyTabProps) {
+export default function PartyTab({ partyMembers, onUpdate, onOpenModal, battleContext }: PartyTabProps) {
   const forgeOptions = [
     { value: 0, label: '0' },
     { value: 1, label: '1' },
@@ -52,7 +33,6 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
     '/images/icons/기타/부품.png',
   ];
 
-  // ✅ 수정: setName을 item에 포함시켜 반환 (세트효과 계산에 필요)
   const findEquipment = (data: any[], id: string | null) => {
     if (!id) return null;
     for (const group of data) {
@@ -74,6 +54,23 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
         const character = member.characterId
           ? charactersData.find(c => c.id === member.characterId)
           : null;
+
+        // 파티원의 계산된 능력치 가져오기 (파티원 간 버프는 전달하지 않음)
+        const resolved = member.characterId 
+          ? resolveOperator(member, battleContext) 
+          : null;
+        
+        const memberTotals = resolved?.totals ?? {};
+        
+        // 계산된 최종 능력치
+        const memberFinalAtk = memberTotals['FINAL_ATK'] ?? 0;
+        const memberFinalStats = {
+          str: memberTotals['FINAL_STR'] ?? 0,
+          dex: memberTotals['FINAL_DEX'] ?? 0,
+          int: memberTotals['FINAL_INT'] ?? 0,
+          wil: memberTotals['FINAL_WILL'] ?? 0,
+          artsIntensity: memberTotals['FINAL_ARTS_INTENSITY'] ?? 0,
+        };
 
         const equipmentData = [
           { type: '상의', key: 'armor' as const, data: findEquipment(armorsData, member.equipment.armor) },
@@ -98,13 +95,6 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
           .filter(Boolean) as { setName: string; setEffect: typeof equipmentSetsData[number] }[];
 
         const weaponData = weaponsData.find(w => w.id === member.weaponId);
-
-        // 스탯 헬퍼
-        const getStatValue = (name: string, level: number) => {
-          if (!character) return 0;
-          const stat = character.stats.find((s: any) => s.name === name);
-          return stat ? stat.values[level] : 0;
-        };
 
         return (
           <div key={memberIndex} className="space-y-4 p-4 bg-secondary/30 rounded-lg border border-border">
@@ -167,37 +157,52 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal }: PartyT
               {/* 3열: 여백 구분선 */}
               <div className="w-px bg-zinc-700/50 mx-1 self-stretch" />
 
-              {/* 4열: 공격력 + 4종 2x2 */}
+              {/* 4열: 계산된 능력치 표시 */}
               {character ? (
-
                 <div className="flex-1 min-w-0 flex gap-2 py-3">
-                  {/* 공격력 박스: 이 w-[35%] 값으로 가로 비율 조절 */}
-                  <div className="border-zinc-700 bg-secondary/50 rounded border p-3.5 flex items-center gap-2.5 w-[40%] shrink-0">
-                    <img src="/images/icons/스탯/공격력.png" alt="공격력" className="bg-accent rounded w-17 h-17 object-contain shrink-0" />
-                    <div className="px-1.5 flex flex-col justify-center min-w-0">
-                      <div className="py-0.5 flex items-center">
-                        <span className="text-[13px] font-bold text-zinc-400">공격력</span>
+                  {/* 왼쪽: 공격력 + 아츠 강도 세로 배치 */}
+                  <div className="flex flex-col gap-2 w-[33%]">
+                    {/* 공격력 */}
+                    <div className="border-zinc-700 bg-secondary/50 rounded border p-2 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <img src="/images/icons/스탯/공격력.png" alt="공격력" className="bg-accent rounded w-9 h-9 object-contain shrink-0" />
+                        <span className="text-xs text-zinc-400 truncate">공격력</span>
                       </div>
-                      <div className="py-1 flex items-center">
-                        <span className="text-[20px] font-bold tabular-nums leading-tight">
-                          {getStatValue('공격력', member.operatorLevel)}
-                        </span>
+                      <span className="px-1 text-sm font-bold tabular-nums shrink-0">
+                        {memberFinalAtk}
+                      </span>
+                    </div>
+
+                    {/* 아츠 강도 */}
+                    <div className="border-zinc-700 bg-secondary/50 rounded border p-2 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <img src="/images/icons/기타/아츠강도.png" alt="아츠 강도" className="bg-accent rounded w-9 h-9 object-contain shrink-0" />
+                        <span className="text-xs text-zinc-400 truncate">아츠 강도</span>
                       </div>
+                      <span className="px-1 text-sm font-bold tabular-nums shrink-0">
+                        {memberFinalStats.artsIntensity}
+                      </span>
                     </div>
                   </div>
-                  {/* 4종 박스: 공격력 박스의 나머지 공간을 균등하게 채움 */}
-                  <div className="flex-1 grid grid-cols-2 gap-2">
-                    {(['힘', '민첩', '지능', '의지'] as const).map((statName) => (
-                      <div key={statName} className="border-zinc-700 bg-secondary/50 rounded border p-2 flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5 min-w-0">
-                          <img src={`/images/icons/스탯/${statName}.png`} alt={statName} className="bg-accent rounded w-9 h-9 object-contain shrink-0" />
-                          <span className="text-xs text-zinc-400 truncate">{statName}</span>
-                        </div>
-                        <span className="px-1 text-sm font-bold tabular-nums shrink-0">{getStatValue(statName, member.operatorLevel)}</span>
-                      </div>
-                    ))}
-                  </div>
 
+                  {/* 오른쪽: 4종 스탯 (2x2 그리드) */}
+                  <div className="flex-1 grid grid-cols-2 gap-2">
+                    {(['str', 'dex', 'int', 'wil'] as const).map((statKey, idx) => {
+                      const statNames = ['힘', '민첩', '지능', '의지'];
+                      const statIcons = ['힘', '민첩', '지능', '의지'];
+                      return (
+                        <div key={statKey} className="border-zinc-700 bg-secondary/50 rounded border p-2 flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <img src={`/images/icons/스탯/${statIcons[idx]}.png`} alt={statNames[idx]} className="bg-accent rounded w-9 h-9 object-contain shrink-0" />
+                            <span className="text-xs text-zinc-400 truncate">{statNames[idx]}</span>
+                          </div>
+                          <span className="px-1 text-sm font-bold tabular-nums shrink-0">
+                            {memberFinalStats[statKey]}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               ) : (
                 <div className="flex-1 flex items-center justify-center text-xs text-zinc-600 italic">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { X } from 'lucide-react';
 import armorsData from '../../data/equipments/armors.json';
 import glovesData from '../../data/equipments/gloves.json';
@@ -10,7 +10,33 @@ interface EquipmentSelectModalProps {
   onSelect: (equipmentId: string) => void;
 }
 
+// 장비 아이템 타입 정의
+interface EquipmentItem {
+  id: string;
+  name: string;
+  image?: string;
+  stats?: Array<{
+    name: string;
+    type: string;
+    values: number[];
+  }>;
+  options?: Array<{
+    name?: string;
+    type?: string;
+    values: number[];
+    target?: string;
+  }>;
+  setName?: string;
+}
+
+interface EquipmentGroup {
+  setName: string;
+  equips: EquipmentItem[];
+}
+
 export default function EquipmentSelectModal({ target, onClose, onSelect }: EquipmentSelectModalProps) {
+  const [selectedSet, setSelectedSet] = useState<string | null>(null);
+
   const getEquipmentType = () => {
     if (!target) return '상의';
     const t = target.toLowerCase();
@@ -21,28 +47,43 @@ export default function EquipmentSelectModal({ target, onClose, onSelect }: Equi
 
   const equipmentType = getEquipmentType();
 
-  // 1. 선택된 타입에 따른 rawData 설정
-  let rawData: any[] = [];
+  // 장비 타입에 따른 rawData 설정
+  let rawData: EquipmentGroup[] = [];
   let defaultIcon = '🎽';
 
   if (equipmentType === '상의') {
-    rawData = armorsData;
+    rawData = armorsData as EquipmentGroup[];
     defaultIcon = '👕';
   } else if (equipmentType === '장갑') {
-    rawData = glovesData;
+    rawData = glovesData as EquipmentGroup[];
     defaultIcon = '🧤';
   } else {
-    rawData = partsData;
+    rawData = partsData as EquipmentGroup[];
     defaultIcon = '⚙️';
   }
 
-  // 2. 공통 평탄화 로직: 모든 장비 JSON이 { setName, equips } 구조이므로 동일하게 적용
-  const flatEquipmentList = rawData.flatMap((group) => 
-    group.equips.map((item: any) => ({
+  // 세트 목록 추출
+  const setNames = useMemo(() => {
+    return rawData.map(group => group.setName);
+  }, [rawData]);
+
+  // 세트별 필터링된 장비 목록
+  const filteredEquipment = useMemo(() => {
+    if (!selectedSet) {
+      return rawData.flatMap((group) =>
+        group.equips.map((item: EquipmentItem) => ({
+          ...item,
+          setName: group.setName
+        }))
+      );
+    }
+    const targetGroup = rawData.find(g => g.setName === selectedSet);
+    if (!targetGroup) return [];
+    return targetGroup.equips.map((item: EquipmentItem) => ({
       ...item,
-      setName: group.setName // 세트 이름을 아이템 객체에 포함
-    }))
-  );
+      setName: targetGroup.setName
+    }));
+  }, [rawData, selectedSet]);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -55,9 +96,36 @@ export default function EquipmentSelectModal({ target, onClose, onSelect }: Equi
           </button>
         </div>
 
+        {/* 세트 카테고리 탭 */}
+        <div className="px-4 pt-3 pb-1 border-b border-zinc-800 flex gap-2 overflow-x-auto">
+          <button
+            onClick={() => setSelectedSet(null)}
+            className={`px-3 py-1.5 text-sm rounded-full transition-colors shrink-0 ${
+              selectedSet === null
+                ? 'bg-primary text-black font-bold'
+                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+            }`}
+          >
+            전체
+          </button>
+          {setNames.map((setName) => (
+            <button
+              key={setName}
+              onClick={() => setSelectedSet(setName)}
+              className={`px-3 py-1.5 text-sm rounded-full transition-colors shrink-0 ${
+                selectedSet === setName
+                  ? 'bg-primary text-black font-bold'
+                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+              }`}
+            >
+              {setName}
+            </button>
+          ))}
+        </div>
+
         <div className="p-6 overflow-y-auto custom-scrollbar">
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
-            {flatEquipmentList.map((item) => (
+            {filteredEquipment.map((item: EquipmentItem) => (
               <button
                 key={item.id}
                 onClick={() => onSelect(item.id)}

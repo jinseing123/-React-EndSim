@@ -1,28 +1,7 @@
 import { useState } from 'react';
 import MainOperatorTab from './MainOperatorTab';
 import PartyTab from './PartyTab';
-
-interface OperatorData {
-  characterId: string | null;
-  operatorLevel: number;
-  breakthrough: number;
-  skillLevels: [number, number, number, number];
-  equipment: {
-    armor: string | null;
-    glove: string | null;
-    part1: string | null;
-    part2: string | null;
-  };
-  equipmentForge: {
-    armor: { stat1: number; stat2: number; option: number };
-    glove: { stat1: number; stat2: number; option: number };
-    part1: { stat1: number; stat2: number; option: number };
-    part2: { stat1: number; stat2: number; option: number };
-  };
-  weaponId: string | null;
-  temperaments: [number, number, number];
-  foodId: string | null;
-}
+import type { OperatorData, BattleContext } from '../../types';  // 추가
 
 interface DetailSectionProps {
   mainOperator: OperatorData;
@@ -30,6 +9,7 @@ interface DetailSectionProps {
   onUpdateMainOperator: (data: OperatorData) => void;
   onUpdatePartyMembers: (data: OperatorData[]) => void;
   onOpenModal: (type: string, target: string) => void;
+  battleContext: BattleContext;  // 추가
 }
 
 export default function DetailSection({
@@ -38,6 +18,7 @@ export default function DetailSection({
   onUpdateMainOperator,
   onUpdatePartyMembers,
   onOpenModal,
+  battleContext,  // 추가
 }: DetailSectionProps) {
   const [activeTab, setActiveTab] = useState<'main' | 'party'>('main');
 
@@ -80,6 +61,7 @@ export default function DetailSection({
             partyMembers={partyMembers}
             onUpdate={onUpdatePartyMembers}
             onOpenModal={onOpenModal}
+            battleContext={battleContext}  // 추가
           />
         )}
       </div>

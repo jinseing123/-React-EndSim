@@ -1,31 +1,6 @@
 import CustomSelect from './CustomSelect';
 import charactersData from '../../data/characters.json';
-
-interface OperatorData {
-  characterId: string | null;
-  operatorLevel: number;
-  breakthrough: number;
-  skillLevels: [number, number, number, number];
-  equipment: { armor: string | null; glove: string | null; part1: string | null; part2: string | null; };
-  equipmentForge: {
-    armor: { stat1: number; stat2: number; option: number };
-    glove: { stat1: number; stat2: number; option: number };
-    part1: { stat1: number; stat2: number; option: number };
-    part2: { stat1: number; stat2: number; option: number };
-  };
-  weaponId: string | null;
-  temperaments: [number, number, number];
-  foodId: string | null;
-}
-
-interface BattleContext {
-  imbalanceState: boolean;
-  defenseBreak: number;
-  artsType: number;
-  artsLevel: number;
-  artsAbnormalType: number | null;
-  artsAbnormalParty: number;
-}
+import type { OperatorData, BattleContext } from '../../types';  // 타입 import
 
 interface FinalStats {
   str: number;
@@ -46,18 +21,15 @@ interface MainOperatorSectionProps {
 }
 
 export default function MainOperatorSection({ operatorData, battleContext, onBattleContextChange, finalAtk, finalStats, onOpenModal }: MainOperatorSectionProps) {
-  const { imbalanceState, defenseBreak, artsType, artsLevel, artsAbnormalType, artsAbnormalParty } = battleContext;
+  const { imbalanceState, defenseBreak, artsType, artsLevel, artsAbnormal, artsAbnormalParty } = battleContext;
 
-  // battleContext의 단일 필드만 바꾸는 헬퍼
   const set = <K extends keyof BattleContext>(key: K, value: BattleContext[K]) =>
     onBattleContextChange({ ...battleContext, [key]: value });
 
   const character = charactersData.find(c => c.id === operatorData.characterId) || charactersData[0];
 
-  const getStatValue = (name: string, level: number) => {
-    const stat = character.stats.find(s => s.name === name);
-    return stat ? stat.values[level] : 0;
-  };
+  // 나머지 코드는 동일...
+  // (이전에 작성한 MainOperatorSection.tsx 내용 그대로 사용)
 
   const primaryStats = [
     { name: '공격력', value: finalAtk, icon: '/images/icons/스탯/공격력.png' },
@@ -80,6 +52,22 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
     { title: "배틀 스킬", icon: character.images.battle, levelIdx: 1, list: character.skills.battle },
     { title: "연계 스킬", icon: character.images.combo, levelIdx: 2, list: character.skills.combo },
     { title: "궁극기", icon: character.images.ultimate, levelIdx: 3, list: character.skills.ultimate }
+  ];
+
+  // 아츠이상 타입 목록
+  const artsAbnormalTypes: { key: keyof typeof artsAbnormal; label: string; icon: string }[] = [
+    { key: '연소', label: '연소', icon: '/images/icons/아츠이상/연소.png' },
+    { key: '감전', label: '감전', icon: '/images/icons/아츠이상/감전.png' },
+    { key: '부식', label: '부식', icon: '/images/icons/아츠이상/부식.png' },
+    { key: '동결', label: '동결', icon: '/images/icons/아츠이상/동결.png' },
+  ];
+
+  const stepOptions = [0, 1, 2, 3, 4].map(v => ({ value: v, label: String(v) }));
+  const partyOptions = [
+    { value: 0, label: '없음' },
+    { value: 1, label: '파티원 1' },
+    { value: 2, label: '파티원 2' },
+    { value: 3, label: '파티원 3' },
   ];
 
   return (
@@ -109,7 +97,6 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
           </button>
         </div>
 
-        {/* 공격력 */}
         <div className="space-y-3">
           <div className="grid grid-cols-1 gap-3">
             {primaryStats.map((s, i) => (
@@ -147,7 +134,7 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
                 </div>
                 <div className="min-w-0">
                   <div className="text-xs text-muted-foreground">{s.name}</div>
-                  <div className="font-bold text-sm">{s.value}</div>
+                  <div className="font-bold text-sm">{s.value}{s.name === '치명타 확률' && '%'}</div>
                 </div>
               </div>
             ))}
@@ -155,12 +142,10 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
         </div>
       </div>
 
-
-      {/* 스킬 정보 구역: 2x2 그리드 레이아웃 */}
+      {/* 스킬 정보 구역 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {skillCategories.map((cat, i) => (
           <div key={i} className="flex flex-col bg-secondary/20 rounded-lg border border-border overflow-hidden">
-            {/* 상단: 아이콘 및 타이틀 영역 */}
             <div className="bg-zinc-800/80 p-3 flex items-center gap-3 border-b border-border">
               <div
                 className="w-13 h-13 flex items-center justify-center rounded-full border-[2px] shadow-lg overflow-hidden shrink-0"
@@ -180,7 +165,6 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
               </span>
             </div>
 
-            {/* 하단: 스킬 리스트 영역 */}
             <div className="p-3 space-y-2">
               {cat.list.map((skill: any, idx: number) => {
                 const val = skill.damagePct[operatorData.skillLevels[cat.levelIdx] - 1];
@@ -188,21 +172,14 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
 
                 return (
                   <div key={idx} className="flex justify-between items-center gap-2 border-b border-zinc-800 last:border-0 pb-1 last:pb-0">
-                    {/* 스킬 이름 */}
                     <span className="text-[13px] text-zinc-400 truncate flex-1">
                       {skill.name || "피해 계수"}
                     </span>
-
-                    {/* 피해량 표기: [일반] / [아이콘] [치명타] */}
                     <div className="flex items-center gap-2">
-                      {/* 일반 피해량 */}
                       <span className="text-[15px] font-mono font-bold text-primary">
                         {val}%
                       </span>
-
                       <span className="text-zinc-600 text-[12px]">/</span>
-
-                      {/* 치명타 피해량 및 아이콘 */}
                       <div className="flex items-center gap-1">
                         <img
                           src={"./images/icons/기타/치명타.png"}
@@ -214,7 +191,6 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
                         </span>
                       </div>
                     </div>
-
                   </div>
                 );
               })}
@@ -230,6 +206,7 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
 
       {/* 하단 세팅 구역 */}
       <div className="space-y-4 pt-4 border-t border-border">
+        {/* 불균형 상태 */}
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">불균형 상태</span>
           <button
@@ -241,15 +218,7 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
           </button>
         </div>
 
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium">방어불능 단계</span>
-          <CustomSelect
-            value={defenseBreak}
-            options={[0, 1, 2, 3, 4].map(v => ({ value: v, label: String(v) }))}
-            onChange={v => set('defenseBreak', Number(v))}
-          />
-        </div>
-
+        {/* 아츠부착 섹션 */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">아츠부착 타입</span>
@@ -276,49 +245,62 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
             <span className="text-sm font-medium">아츠부착 단계</span>
             <CustomSelect
               value={artsLevel}
-              options={[0, 1, 2, 3, 4].map(v => ({ value: v, label: String(v) }))}
+              options={stepOptions}
               onChange={v => set('artsLevel', Number(v))}
+              className="w-24"
             />
           </div>
         </div>
 
-        {/* 아츠이상 */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">아츠이상 타입</span>
-            <div className="flex gap-1">
-              {[
-                { label: '연소', icon: '/images/icons/아츠이상/연소.png' },
-                { label: '동결', icon: '/images/icons/아츠이상/동결.png' },
-                { label: '쇄빙', icon: '/images/icons/아츠이상/쇄빙.png' },
-                { label: '감전', icon: '/images/icons/아츠이상/감전.png' },
-                { label: '부식', icon: '/images/icons/아츠이상/부식.png' },
-              ].map((item, i) => (
-                <button
-                  key={i}
-                  onClick={() => set('artsAbnormalType', artsAbnormalType === i ? null : i)}
-                  className={`w-9 h-9 rounded-md transition-all flex items-center justify-center ${artsAbnormalType === i ? 'bg-primary ring-2 ring-primary/50' : 'bg-secondary hover:bg-zinc-700'
-                    }`}
-                  title={item.label}
-                >
-                  <img src={item.icon} alt={item.label} className="w-6 h-6 object-contain" />
-                </button>
-              ))}
+        {/* 아츠이상 + 방어불능 1행 배치 (각 블록 내에 부여자 포함) */}
+        <div className="grid grid-cols-5 gap-2">
+          {/* 방어불능 */}
+          <div className="bg-secondary/30 rounded-lg p-2 space-y-2">
+            <div className="flex justify-center">
+              <img src="/images/icons/기타/방어불능.png" alt="방어불능" className="w-8 h-8 object-contain" />
+            </div>
+            <span className="text-[10px] text-zinc-400 block text-center mb-4">방어불능</span>
+            <div className="flex justify-center">
+              <CustomSelect
+                value={defenseBreak}
+                options={stepOptions}
+                onChange={v => set('defenseBreak', Number(v))}
+                className="w-auto"
+              />
             </div>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">아츠이상 부여 파티원</span>
-            <CustomSelect
-              value={artsAbnormalParty}
-              options={[
-                { value: 0, label: '없음' },
-                { value: 1, label: '파티원 1' },
-                { value: 2, label: '파티원 2' },
-                { value: 3, label: '파티원 3' },
-              ]}
-              onChange={v => set('artsAbnormalParty', Number(v))}
-            />
-          </div>
+
+          {/* 아츠이상 4종 */}
+          {artsAbnormalTypes.map(({ key, label, icon }) => (
+            <div key={key} className="bg-secondary/30 rounded-lg p-2 space-y-2">
+              <div className="flex justify-center">
+                <img src={icon} alt={label} className="w-8 h-8 object-contain" />
+              </div>
+              <span className="text-[10px] text-zinc-400 block text-center mb-4">{label}</span>
+              
+              {/* 단계 선택자 */}
+              <div className="flex justify-center">
+                <CustomSelect
+                  value={artsAbnormal[key]}
+                  options={stepOptions}
+                  onChange={v => set('artsAbnormal', { ...artsAbnormal, [key]: Number(v) })}
+                  className="w-auto"
+                />
+              </div>
+              <span className="text-[11px] text-zinc-500 block text-center mb-4">스택</span>
+              
+              {/* 부여자 선택자 */}
+              <div className="flex justify-center">
+                <CustomSelect
+                  value={artsAbnormalParty[key]}
+                  options={partyOptions}
+                  onChange={v => set('artsAbnormalParty', { ...artsAbnormalParty, [key]: Number(v) })}
+                  className="w-auto"
+                />
+              </div>
+              <span className="text-[11px] text-zinc-500 block text-center">아츠이상 부여자</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

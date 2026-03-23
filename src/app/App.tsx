@@ -8,84 +8,65 @@ import WeaponSelectModal from './components/WeaponSelectModal';
 import FoodSelectModal from './components/FoodSelectModal';
 
 import charactersData from '../data/characters.json';
+import type { OperatorData, BattleContext } from '../types';  // 타입 import
 
-// ─────────────────────────────────────────────────
 // stat type 영문 키 → 한글 이름 매핑 테이블.
-// isRaw: true → 수치 그대로 표기 / false(기본) → 뒤에 % 붙임
-// 새로운 type이 생기면 여기에 추가.
-// ─────────────────────────────────────────────────
 const STAT_LABEL_MAP: { type: string; label: string; isRaw?: boolean }[] = [
-  // 공격 관련
-  { type: 'ATK_CONST',        label: '공격력 (고정)',        isRaw: true },
-  { type: 'ATK_PERCENT',      label: '공격력' },
-  // 치명타
-  { type: 'CRIT_CHANCE',      label: '치명타 확률' },
-  { type: 'CRIT_DMG',         label: '치명타 피해' },
-  // 피해 보너스
-  { type: 'ALL_DMG',          label: '모든 피해' },
-  { type: 'SKILL_DMG',        label: '모든 스킬 피해' },
-  { type: 'NORMAL_DMG',       label: '일반 공격 피해' },
-  { type: 'BATTLE_DMG',       label: '배틀 스킬 피해' },
-  { type: 'COMBO_DMG',        label: '연계 스킬 피해' },
-  { type: 'ULTIMATE_DMG',     label: '궁극기 피해' },
-  { type: 'BATTLE_PHYSICAL_DMG',   label: '배틀 스킬 물리 피해' },
+  { type: 'ATK_CONST', label: '공격력 (고정)', isRaw: true },
+  { type: 'ATK_PERCENT', label: '공격력' },
+  { type: 'CRIT_CHANCE', label: '치명타 확률' },
+  { type: 'CRIT_DMG', label: '치명타 피해' },
+  { type: 'ALL_DMG', label: '모든 피해' },
+  { type: 'SKILL_DMG', label: '모든 스킬 피해' },
+  { type: 'NORMAL_DMG', label: '일반 공격 피해' },
+  { type: 'BATTLE_DMG', label: '배틀 스킬 피해' },
+  { type: 'COMBO_DMG', label: '연계 스킬 피해' },
+  { type: 'ULTIMATE_DMG', label: '궁극기 피해' },
+  { type: 'BATTLE_PHYSICAL_DMG', label: '배틀 스킬 물리 피해' },
   { type: 'ULTIMATE_PHYSICAL_DMG', label: '궁극기 물리 피해' },
-  { type: 'STAGGER_DMG',           label: '불균형 피해' },
-  // 속성 피해
-  { type: 'PHYSICAL_DMG',     label: '물리 피해' },
-  { type: 'PHYSIC_DMG',       label: '물리 피해' },
-  { type: 'ARTS_DMG',         label: '아츠 피해' },
-  { type: 'FIRE_DMG',         label: '열기 피해' },
-  { type: 'ICE_DMG',          label: '냉기 피해' },
-  { type: 'ELECTRIC_DMG',     label: '전기 피해' },
-  { type: 'NATURE_DMG',       label: '자연 피해' },
-  // 아츠 관련
-  { type: 'ARTS_INTENSITY',   label: '오리지늄 아츠 강도',   isRaw: true },
-  { type: 'ARTS_AMP',         label: '아츠 증폭' },
-  { type: 'ARTS_VULN',        label: '아츠 취약' },
-  // 기타 버프
-  { type: 'ULTIMATE_CHARGE',  label: '궁극기 충전 효율' },
-  { type: 'ULTMATE_CHARGE',   label: '궁극기 충전 효율' }, // 데이터 오타 대비
+  { type: 'STAGGER_DMG', label: '불균형 피해' },
+  { type: 'PHYSICAL_DMG', label: '물리 피해' },
+  { type: 'PHYSIC_DMG', label: '물리 피해' },
+  { type: 'ARTS_DMG', label: '아츠 피해' },
+  { type: 'FIRE_DMG', label: '열기 피해' },
+  { type: 'ICE_DMG', label: '냉기 피해' },
+  { type: 'ELECTRIC_DMG', label: '전기 피해' },
+  { type: 'NATURE_DMG', label: '자연 피해' },
+  { type: 'ARTS_INTENSITY', label: '오리지늄 아츠 강도', isRaw: true },
+  { type: 'ARTS_AMP', label: '아츠 증폭' },
+  { type: 'ARTS_VULN', label: '아츠 취약' },
+  { type: 'ULTIMATE_CHARGE', label: '궁극기 충전 효율' },
+  { type: 'ULTMATE_CHARGE', label: '궁극기 충전 효율' },
   { type: 'COMBO_COOLDOWN_REDUCTION', label: '연계 스킬 쿨타임 감소' },
-  { type: 'HEAL',             label: '치유 효율' },
-  { type: 'ALL_DMG_REDUCTION',label: '받는 피해 감소' },
-  { type: 'STAGGER_EFF',      label: '불균형 효율 보너스' },
+  { type: 'HEAL', label: '치유 효율' },
+  { type: 'ALL_DMG_REDUCTION', label: '받는 피해 감소' },
+  { type: 'STAGGER_EFF', label: '불균형 효율 보너스' },
 ];
 
-interface OperatorData {
-  characterId: string | null;
-  operatorLevel: number;
-  breakthrough: number;
-  skillLevels: [number, number, number, number];
-  equipment: {
-    armor: string | null;
-    glove: string | null;
-    part1: string | null;
-    part2: string | null;
-  };
-  equipmentForge: {
-    armor: { stat1: number; stat2: number; option: number };
-    glove: { stat1: number; stat2: number; option: number };
-    part1: { stat1: number; stat2: number; option: number };
-    part2: { stat1: number; stat2: number; option: number };
-  };
-  weaponId: string | null;
-  temperaments: [number, number, number];
-  foodId: string | null;
-}
+// OperatorData 타입은 이미 import 했으므로 중복 정의 제거
 
 export default function App() {
   const [modalType, setModalType] = useState<string | null>(null);
   const [modalTarget, setModalTarget] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const [battleContext, setBattleContext] = useState({
+  const [battleContext, setBattleContext] = useState<BattleContext>({
     imbalanceState: false,
     defenseBreak: 0,
     artsType: 0,
     artsLevel: 0,
-    artsAbnormalType: null as number | null,
-    artsAbnormalParty: 0,
+    artsAbnormal: {
+      연소: 0,
+      감전: 0,
+      부식: 0,
+      동결: 0,
+    },
+    artsAbnormalParty: {
+      연소: 0,
+      감전: 0,
+      부식: 0,
+      동결: 0,
+    },
   });
 
   const [mainOperator, setMainOperator] = useState<OperatorData>({
@@ -156,40 +137,28 @@ export default function App() {
     },
   ]);
 
-  // ─────────────────────────────────────────────────
-  // resolveOperator 호출 및 결과 추출
-  // { mainTotals, finalAtk, finalStats } 세개의 App파일 변수를 한번에 선언 및 useMemo로 계속 업데이트함.
-  //
-  // useMemo: 의존성 배열 [mainOperator, partyMembers, battleContext.defenseBreak] 중
-  //          하나라도 바뀔 때만 안의 함수를 재실행. 그 외엔 이전 결과 재사용.
-  //
-  // resolveOperator(...)      → { raw, character, totals, ... } 객체 return해줌.
-  // resolveOperator(...).totals → 반환 객체에서 totals 필드만 꺼냄
-  //
-  // useMemo가 { mainTotals, finalAtk, finalStats } 객체를 반환(return)하면,
-  // const { mainTotals, finalAtk, finalStats } = ... 으로 한번에 세 변수가 업데이트됨.
   const { mainTotals, finalAtk, finalStats } = useMemo(() => {
-    const totals = resolveOperator(mainOperator, { defenseBreak: battleContext.defenseBreak }, partyMembers).totals;
+    const totals = resolveOperator(mainOperator, battleContext, partyMembers).totals;
     return {
       mainTotals: totals,
       finalAtk: totals['FINAL_ATK'] ?? 0,
       finalStats: {
-        str:          totals['FINAL_STR']          ?? 0,
-        dex:          totals['FINAL_DEX']          ?? 0,
-        int:          totals['FINAL_INT']          ?? 0,
-        wil:          totals['FINAL_WILL']         ?? 0,
-        artsIntensity:totals['FINAL_ARTS_INTENSITY']?? 0,
-        critChance:   totals['FINAL_CRIT_CHANCE']  ?? 0,
+        str: totals['FINAL_STR'] ?? 0,
+        dex: totals['FINAL_DEX'] ?? 0,
+        int: totals['FINAL_INT'] ?? 0,
+        wil: totals['FINAL_WILL'] ?? 0,
+        artsIntensity: totals['FINAL_ARTS_INTENSITY'] ?? 0,
+        critChance: totals['FINAL_CRIT_CHANCE'] ?? 0,
       },
     };
-  }, [mainOperator, partyMembers, battleContext.defenseBreak]);
+  }, [mainOperator, partyMembers, battleContext]);
 
   const handleSelectCharacter = (characterId: string) => {
     if (modalTarget === 'main') {
-      setMainOperator({ ...mainOperator, characterId }); // 객체에서 {...객체, 새데이터}: "기존 객체의 내용을 다 복사해오되, 뒤에 적은 데이터만 살짝 바꿔줘" (일부만 수정하기)
+      setMainOperator({ ...mainOperator, characterId });
     } else if (modalTarget?.startsWith('party')) {
-      const partyIndex = parseInt(modalTarget.replace('party', '')) - 1; // 'party1' -> 0, 'party2' -> 1, 'party3' -> 2
-      const newParty = [...partyMembers]; // 배열에서 [...배열]: "기존 배열의 내용물을 다 꺼내서 새로운 배열에 담아줘" (복사본 만들기)
+      const partyIndex = parseInt(modalTarget.replace('party', '')) - 1;
+      const newParty = [...partyMembers];
       newParty[partyIndex] = { ...newParty[partyIndex], characterId };
       setPartyMembers(newParty);
     }
@@ -199,8 +168,6 @@ export default function App() {
   const handleSelectEquipment = (equipmentId: string) => {
     if (!modalTarget) return;
 
-    // 예: 'main-eq1-armor' -> parts[2]는 'armor'
-    // 예: 'party1-eq2-glove' -> parts[2]는 'glove'
     const parts = modalTarget.split('-');
     const target = parts[0];
     const equipmentKey = parts[2] as 'armor' | 'glove' | 'part1' | 'part2';
@@ -244,7 +211,6 @@ export default function App() {
   return (
     <div className="dark min-h-screen bg-background text-foreground p-6">
 
-      {/* ── 사이드바 토글 탭 버튼 (사이드바 닫혀있을 때만 표시) ── */}
       {!sidebarOpen && (
         <button
           onClick={() => setSidebarOpen(true)}
@@ -257,11 +223,9 @@ export default function App() {
         </button>
       )}
 
-      {/* ── 사이드바 패널 (오버레이) ── */}
       <aside
-        className={`fixed left-0 top-0 h-full z-40 w-60 bg-zinc-900 border-r border-border flex flex-col shadow-2xl transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed left-0 top-0 h-full z-40 w-60 bg-zinc-900 border-r border-border flex flex-col shadow-2xl transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="bg-zinc-800 px-4 py-3 border-b border-border flex items-center justify-between shrink-0">
           <div>
@@ -294,9 +258,7 @@ export default function App() {
         </div>
       </aside>
 
-      {/* ── 메인 콘텐츠 (기존 레이아웃 유지) ── */}
       <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 구역1: 메인 오퍼레이터 */}
         <MainOperatorSection
           operatorData={mainOperator}
           battleContext={battleContext}
@@ -309,7 +271,6 @@ export default function App() {
           }}
         />
 
-        {/* 구역2: 상세 설정 */}
         <DetailSection
           mainOperator={mainOperator}
           partyMembers={partyMembers}
@@ -319,10 +280,10 @@ export default function App() {
             setModalType(type);
             setModalTarget(target);
           }}
+          battleContext={battleContext}  // 추가
         />
       </div>
 
-      {/* 모달 */}
       {modalType === 'character' && (
         <CharacterSelectModal
           target={modalTarget}

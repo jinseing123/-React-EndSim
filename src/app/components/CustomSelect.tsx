@@ -13,7 +13,7 @@ export default function CustomSelect({ value, options, onChange, className = '' 
       <select
         value={value}
         onChange={(e) => onChange(isNaN(Number(e.target.value)) ? e.target.value : Number(e.target.value))}
-        className="appearance-none bg-secondary text-foreground px-3 py-1.5 pr-8 rounded border border-border cursor-pointer hover:bg-accent transition-colors"
+        className="appearance-none bg-secondary text-foreground px-3 py-1.5 pr-7 rounded border border-border cursor-pointer hover:bg-accent transition-colors w-full"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -21,7 +21,7 @@ export default function CustomSelect({ value, options, onChange, className = '' 
           </option>
         ))}
       </select>
-      <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+      <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none text-muted-foreground" />
     </div>
   );
 }

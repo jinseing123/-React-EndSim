@@ -24,7 +24,7 @@
     ],
     "talent-buffs": [
     ],
-    "buffs": [
+    "skill-buffs": [
     ],
     "conditional-buffs": [
     ],
@@ -110,7 +110,7 @@
     "id": "Gilberta",
     "name": "질베르타",
     "desc": [
-      "방어불능 단계에 따라서 궁극기 버프량이 달라짐."
+      "방어불능 스택에 따라서 궁극기 버프량이 달라짐."
     ],
     "images": {
       "profile": "./images/characters/질베르타/프로필.png",
@@ -137,7 +137,7 @@
         "name": "아츠 취약",
         "type": "ARTS_VULN",
         "target": "파티",
-        "value": 2
+        "value": [ 1.75, 1.75, 1.75, 2.25, 2.25, 2.25, 2.5, 2.5, 2.5, 3, 3, 3 ]
       },
       {
         "potential-level": 5,
@@ -151,7 +151,7 @@
     "talent-buffs": [
 
     ],
-    "buffs": [
+    "skill-buffs": [
       {
         "trigger": "ultimate",
         "name": "아츠 취약",
