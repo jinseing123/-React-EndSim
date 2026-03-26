@@ -7,6 +7,8 @@ export type ArtsAbnormalType = '연소' | '감전' | '부식' | '동결' | null;
 export interface BattleContext {
   imbalanceState: boolean;
   defenseBreak: number;           // 방어불능 단계 (0-4)
+  armorBreak: number;             // 갑옷파괴 단계 (0-4)
+  armorBreakParty: number;        // 갑옷파괴 부여자 (0-3)
   artsType: number;               // 아츠부착 타입 (0:열기, 1:냉기, 2:전기, 3:자연)
   artsLevel: number;              // 아츠부착 단계 (0-4)
   artsAbnormal: {

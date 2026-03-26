@@ -53,6 +53,8 @@ export default function App() {
   const [battleContext, setBattleContext] = useState<BattleContext>({
     imbalanceState: false,
     defenseBreak: 0,
+    armorBreak: 0,
+    armorBreakParty: 0,
     artsType: 0,
     artsLevel: 0,
     artsAbnormal: {
@@ -269,6 +271,7 @@ export default function App() {
             setModalType(type);
             setModalTarget(target);
           }}
+          totals={mainTotals}
         />
 
         <DetailSection

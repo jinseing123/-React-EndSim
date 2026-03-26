@@ -1,6 +1,8 @@
 import CustomSelect from './CustomSelect';
 import charactersData from '../../data/characters.json';
 import type { OperatorData, BattleContext } from '../../types';  // 타입 import
+import { calculateDamage } from '../../utils/damageCalculator';
+import { StatTotals } from '../../utils/resolveOperator';
 
 interface FinalStats {
   str: number;
@@ -18,10 +20,19 @@ interface MainOperatorSectionProps {
   finalAtk: number;
   finalStats: FinalStats;
   onOpenModal: (type: string, target: string) => void;
+  totals: StatTotals;
 }
 
-export default function MainOperatorSection({ operatorData, battleContext, onBattleContextChange, finalAtk, finalStats, onOpenModal }: MainOperatorSectionProps) {
-  const { imbalanceState, defenseBreak, artsType, artsLevel, artsAbnormal, artsAbnormalParty } = battleContext;
+export default function MainOperatorSection({ 
+  operatorData, 
+  battleContext, 
+  onBattleContextChange, 
+  finalAtk, 
+  finalStats, 
+  onOpenModal,
+  totals 
+}: MainOperatorSectionProps) {
+  const { imbalanceState, defenseBreak, armorBreak, armorBreakParty, artsType, artsLevel, artsAbnormal, artsAbnormalParty } = battleContext;
 
   const set = <K extends keyof BattleContext>(key: K, value: BattleContext[K]) =>
     onBattleContextChange({ ...battleContext, [key]: value });
@@ -168,7 +179,16 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
             <div className="p-3 space-y-2">
               {cat.list.map((skill: any, idx: number) => {
                 const val = skill.damagePct[operatorData.skillLevels[cat.levelIdx] - 1];
-                const critVal = Math.floor(val * 1.5);
+                const dmg = calculateDamage(
+                  finalAtk,
+                  val,
+                  cat.title === "기타" ? "normal" : 
+                  cat.title === "배틀 스킬" ? "battle" :
+                  cat.title === "연계 스킬" ? "combo" : "ultimate" as any,
+                  skill.property,
+                  totals,
+                  battleContext
+                );
 
                 return (
                   <div key={idx} className="flex justify-between items-center gap-2 border-b border-zinc-800 last:border-0 pb-1 last:pb-0">
@@ -177,7 +197,7 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
                     </span>
                     <div className="flex items-center gap-2">
                       <span className="text-[15px] font-mono font-bold text-primary">
-                        {val}%
+                        {dmg.normal.toLocaleString()}
                       </span>
                       <span className="text-zinc-600 text-[12px]">/</span>
                       <div className="flex items-center gap-1">
@@ -187,7 +207,7 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
                           className="w-4 h-4 object-contain"
                         />
                         <span className="text-[15px] font-mono font-bold text-orange-400">
-                          {critVal}%
+                          {dmg.crit.toLocaleString()}
                         </span>
                       </div>
                     </div>
@@ -253,7 +273,7 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
         </div>
 
         {/* 아츠이상 + 방어불능 1행 배치 (각 블록 내에 부여자 포함) */}
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-6 gap-2">
           {/* 방어불능 */}
           <div className="bg-secondary/30 rounded-lg p-2 space-y-2">
             <div className="flex justify-center">
@@ -268,6 +288,36 @@ export default function MainOperatorSection({ operatorData, battleContext, onBat
                 className="w-auto"
               />
             </div>
+          </div>
+
+          {/* 갑옷파괴 */}
+          <div className="bg-secondary/30 rounded-lg p-2 space-y-2 border border-primary/20">
+            <div className="flex justify-center">
+              <img src="/images/icons/기타/방어구.png" alt="갑옷파괴" className="w-8 h-8 object-contain" />
+            </div>
+            <span className="text-[10px] text-zinc-400 block text-center mb-4">갑옷파괴</span>
+            
+            {/* 단계 선택자 */}
+            <div className="flex justify-center">
+              <CustomSelect
+                value={armorBreak}
+                options={stepOptions}
+                onChange={v => set('armorBreak', Number(v))}
+                className="w-auto"
+              />
+            </div>
+            <span className="text-[11px] text-zinc-500 block text-center mb-4">단계</span>
+            
+            {/* 부여자 선택자 */}
+            <div className="flex justify-center">
+              <CustomSelect
+                value={armorBreakParty}
+                options={partyOptions}
+                onChange={v => set('armorBreakParty', Number(v))}
+                className="w-auto"
+              />
+            </div>
+            <span className="text-[11px] text-zinc-500 block text-center">부여자</span>
           </div>
 
           {/* 아츠이상 4종 */}
