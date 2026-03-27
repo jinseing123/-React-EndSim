@@ -2,7 +2,7 @@ import CustomSelect from './CustomSelect';
 import charactersData from '../../data/characters.json';
 import type { OperatorData, BattleContext } from '../../types';  // 타입 import
 import { calculateDamage } from '../../utils/damageCalculator';
-import { StatTotals } from '../../utils/resolveOperator';
+import { BuffTotals } from '../../utils/resolveOperator';
 
 interface FinalStats {
   str: number;
@@ -20,7 +20,7 @@ interface MainOperatorSectionProps {
   finalAtk: number;
   finalStats: FinalStats;
   onOpenModal: (type: string, target: string) => void;
-  totals: StatTotals;
+  totals: BuffTotals;
 }
 
 export default function MainOperatorSection({ 
@@ -30,7 +30,7 @@ export default function MainOperatorSection({
   finalAtk, 
   finalStats, 
   onOpenModal,
-  totals 
+  totals
 }: MainOperatorSectionProps) {
   const { imbalanceState, defenseBreak, armorBreak, armorBreakParty, artsType, artsLevel, artsAbnormal, artsAbnormalParty } = battleContext;
 
@@ -76,9 +76,10 @@ export default function MainOperatorSection({
   const stepOptions = [0, 1, 2, 3, 4].map(v => ({ value: v, label: String(v) }));
   const partyOptions = [
     { value: 0, label: '없음' },
-    { value: 1, label: '파티원 1' },
-    { value: 2, label: '파티원 2' },
-    { value: 3, label: '파티원 3' },
+    { value: 1, label: '메인' },
+    { value: 2, label: '파티원 1' },
+    { value: 3, label: '파티원 2' },
+    { value: 4, label: '파티원 3' },
   ];
 
   return (
@@ -185,7 +186,7 @@ export default function MainOperatorSection({
                   cat.title === "기타" ? "normal" : 
                   cat.title === "배틀 스킬" ? "battle" :
                   cat.title === "연계 스킬" ? "combo" : "ultimate" as any,
-                  skill.property,
+                  skill,
                   totals,
                   battleContext
                 );
@@ -262,7 +263,7 @@ export default function MainOperatorSection({
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">아츠부착 단계</span>
+            <span className="text-sm font-medium">아츠부착 스택</span>
             <CustomSelect
               value={artsLevel}
               options={stepOptions}
@@ -306,7 +307,7 @@ export default function MainOperatorSection({
                 className="w-auto"
               />
             </div>
-            <span className="text-[11px] text-zinc-500 block text-center mb-4">단계</span>
+            <span className="text-[11px] text-zinc-500 block text-center mb-4">스택</span>
             
             {/* 부여자 선택자 */}
             <div className="flex justify-center">
@@ -317,7 +318,7 @@ export default function MainOperatorSection({
                 className="w-auto"
               />
             </div>
-            <span className="text-[11px] text-zinc-500 block text-center">부여자</span>
+            <span className="text-[11px] text-zinc-500 block text-center">갑옷파괴 부여자</span>
           </div>
 
           {/* 아츠이상 4종 */}

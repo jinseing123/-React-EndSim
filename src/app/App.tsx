@@ -41,6 +41,10 @@ const STAT_LABEL_MAP: { type: string; label: string; isRaw?: boolean }[] = [
   { type: 'HEAL', label: '치유 효율' },
   { type: 'ALL_DMG_REDUCTION', label: '받는 피해 감소' },
   { type: 'STAGGER_EFF', label: '불균형 효율 보너스' },
+  // 아츠이상 상태 버프
+  { type: 'SHOCK_BUFF', label: '감전 상태 버프' },
+  { type: 'CORROSION_BUFF', label: '부식 상태 버프' },
+  { type: 'ARMOR_BREAK_BUFF', label: '갑옷파괴 상태 버프' },
 ];
 
 // OperatorData 타입은 이미 import 했으므로 중복 정의 제거
@@ -140,7 +144,24 @@ export default function App() {
   ]);
 
   const { mainTotals, finalAtk, finalStats } = useMemo(() => {
-    const totals = resolveOperator(mainOperator, battleContext, partyMembers).totals;
+    const allOperators = [mainOperator, ...partyMembers];
+    
+    const resolvedBySlot = allOperators.map((op, idx) => {
+      const others = allOperators.filter((_, otherIdx) => otherIdx !== idx);
+      return resolveOperator(op, battleContext, others);
+    });
+    const getFinalArtsIntensity = (slotIdx: number) => resolvedBySlot[slotIdx]?.totals['FINAL_ARTS_INTENSITY'] ?? 0;
+
+    const giverArtsIntensityMap = {
+      0: 0,
+      1: getFinalArtsIntensity(0),
+      2: getFinalArtsIntensity(1),
+      3: getFinalArtsIntensity(2),
+      4: getFinalArtsIntensity(3),
+    };
+
+    const totals = resolveOperator(mainOperator, battleContext, partyMembers, giverArtsIntensityMap).totals;
+
     return {
       mainTotals: totals,
       finalAtk: totals['FINAL_ATK'] ?? 0,

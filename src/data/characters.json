@@ -77,21 +77,25 @@
       ],
       "ultimate": [
         {
+          "replace-skill-dmg-type": "normal",
           "name": "강화 일반 공격 제 1단계 피해",
           "property": "열기",
           "damagePct": [ 65, 71, 78, 84, 91, 97, 104, 110, 117, 125, 134, 146 ]
         },
         {
+          "replace-skill-dmg-type": "normal",
           "name": "강화 일반 공격 제 2단계 피해",
           "property": "열기",
           "damagePct": [ 81, 89, 97, 105, 113, 122, 130, 138, 146, 156, 168, 182 ]
         },
         {
+          "replace-skill-dmg-type": "normal",
           "name": "강화 일반 공격 제 3단계 피해",
           "property": "열기",
           "damagePct": [ 115, 127, 139, 150, 162, 173, 185, 196, 208, 222, 240, 260 ]
         },
         {
+          "replace-skill-dmg-type": "normal",
           "name": "강화 일반 공격 제 4단계 피해",
           "property": "열기",
           "damagePct": [ 203, 223, 243, 263, 284, 304, 324, 344, 365, 390, 420, 456 ]

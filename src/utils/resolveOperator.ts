@@ -18,13 +18,13 @@ import foodsData from '../data/foods.json';
 import equipmentSetsData from '../data/equipments/equipmentSets.json';
 import type { OperatorData, BattleContext } from '../types/index';
 
-export type StatTotals = Record<string, number>;
+export type BuffTotals = Record<string, number>;
 
 // target 상수
 const TARGET_SELF = new Set(['자신', '파티']);
 const TARGET_PARTY = new Set(['파티', '자신을 제외한 파티']);
 
-function addStat(totals: StatTotals, type: string, value: number) {
+function addStat(totals: BuffTotals, type: string, value: number) {
     totals[type] = (totals[type] ?? 0) + value;
 }
 
@@ -41,7 +41,7 @@ function findEquipment(data: any[], id: string | null): any | null {
 // 캐릭터 버프 처리 (buffs + conditional-buffs + talent-buffs + potentials 통합)
 // ============================================================================
 function applyCharacterBuffs(
-    totals: StatTotals,
+    totals: BuffTotals,
     character: any,
     skillLevels: [number, number, number, number],
     breakthrough: number,
@@ -140,16 +140,65 @@ const SKILL_KEY_MAP: Record<string, number> = {
     ultimate: 3,
 };
 
+function calculateArtsAbnormalBuffTotals(
+    context: BattleContext,
+    giverArtsIntensityByParty: Record<number, number>
+) {
+    const shockStacks = Math.max(0, Math.min(4, context.artsAbnormal['감전'] ?? 0));
+    const corrosionStacks = Math.max(0, Math.min(4, context.artsAbnormal['부식'] ?? 0));
+    const armorBreakStacks = Math.max(0, Math.min(4, context.armorBreak ?? 0));
+
+    const shockPerStack = [0, 12, 16, 20, 24][shockStacks] ?? 0;
+    const corrosionPerStack = [0, 12, 16, 20, 24][corrosionStacks] ?? 0;
+    const armorBreakPerStack = [0, 11, 14, 17, 20][armorBreakStacks] ?? 0;
+
+    const getGiverArtsIntensity = (partyIndex: number): number => {
+        if (!partyIndex) return 0;
+        return giverArtsIntensityByParty[partyIndex] ?? 0;
+    };
+
+    const getArtsIntensityMultiplier = (artsIntensity: number): number => {
+        if (artsIntensity <= 0) return 1;
+        return 1 + (2 * artsIntensity) / (300 + artsIntensity);
+    };
+
+    let shockBuff = 0;
+    let corrosionBuff = 0;
+    let armorBreakBuff = 0;
+
+    if (shockStacks > 0) {
+        const shockGiverIntensity = getGiverArtsIntensity(context.artsAbnormalParty['감전'] ?? 0);
+        shockBuff = shockPerStack * getArtsIntensityMultiplier(shockGiverIntensity);
+    }
+
+    if (corrosionStacks > 0) {
+        const corrosionGiverIntensity = getGiverArtsIntensity(context.artsAbnormalParty['부식'] ?? 0);
+        corrosionBuff = corrosionPerStack * getArtsIntensityMultiplier(corrosionGiverIntensity);
+    }
+
+    if (armorBreakStacks > 0) {
+        const armorBreakGiverIntensity = getGiverArtsIntensity(context.armorBreakParty ?? 0);
+        armorBreakBuff = armorBreakPerStack * getArtsIntensityMultiplier(armorBreakGiverIntensity);
+    }
+
+    return {
+        shock: shockBuff,
+        corrosion: corrosionBuff,
+        armorBreak: armorBreakBuff,
+    };
+}
+
 // ============================================================================
 // 메인 함수
 // ============================================================================
 export function resolveOperator(
     op: OperatorData,
     context: BattleContext,
-    partyMembers?: OperatorData[]
+    partyMembers?: OperatorData[],
+    giverArtsIntensityByParty: Record<number, number> = {}
 ) {
     const character = charactersData.find(c => c.id === op.characterId);
-    const totals: StatTotals = {};
+    const totals: BuffTotals = {};
 
     // ========================================================================
     // 1. 캐릭터 기본 스탯 (레벨 기반)
@@ -340,6 +389,14 @@ export function resolveOperator(
         * (1 + mainStatFinal * 0.005 + subStatFinal * 0.002)
     );
     totals['FINAL_ATK'] = finalAtk;
+
+    // ========================================================================
+    // 10. 아츠이상 상태 버프 계산
+    // ========================================================================
+    const artsAbnormalBuffs = calculateArtsAbnormalBuffTotals(context, giverArtsIntensityByParty);
+    totals['SHOCK_BUFF'] = artsAbnormalBuffs.shock;
+    totals['CORROSION_BUFF'] = artsAbnormalBuffs.corrosion;
+    totals['ARMOR_BREAK_BUFF'] = artsAbnormalBuffs.armorBreak;
 
     return {
         raw: op,
