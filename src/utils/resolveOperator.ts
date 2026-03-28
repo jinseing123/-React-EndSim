@@ -356,20 +356,22 @@ export function resolveOperator(
     }
 
     // ========================================================================
-    // 8. 최종 능력치 계산 (MAIN_STAT / SUB_STAT 배율)
+    // 8. 최종 능력치 계산 (메인/서브/전체 능력치 배율)
     // ========================================================================
     const mainStatType = character?.['main-stat']?.type ?? '';
     const subStatType = character?.['sub-stat']?.type ?? '';
-    const mainStatMult = 1 + (totals['MAIN_STAT'] ?? 0) / 100;
-    const subStatMult = 1 + (totals['SUB_STAT'] ?? 0) / 100;
+    const mainStatPercent = (totals['MAIN_STAT_PERCENT'] ?? 0) + (totals['MAIN_STAT'] ?? 0);
+    const subStatPercent = (totals['SUB_STAT_PERCENT'] ?? 0) + (totals['SUB_STAT'] ?? 0);
+    const allStatPercent = totals['ALL_STAT_PERCENT'] ?? 0;
 
     const SCALED_STAT_TYPES = ['STR', 'DEX', 'INT', 'WILL', 'ARTS_INTENSITY', 'CRIT_CHANCE'];
 
     for (const statType of SCALED_STAT_TYPES) {
         const raw = totals[statType] ?? 0;
-        let mult = 1;
-        if (statType === mainStatType) mult = mainStatMult;
-        else if (statType === subStatType) mult = subStatMult;
+        let totalPercent = allStatPercent;
+        if (statType === mainStatType) totalPercent += mainStatPercent;
+        else if (statType === subStatType) totalPercent += subStatPercent;
+        const mult = 1 + totalPercent / 100;
         totals[`FINAL_${statType}`] = Math.round(raw * mult);
     }
 

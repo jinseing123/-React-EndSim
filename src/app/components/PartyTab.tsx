@@ -8,6 +8,7 @@ import weaponsData from '../../data/weapons.json';
 import equipmentSetsData from '../../data/equipments/equipmentSets.json';
 import { resolveOperator } from '../../utils/resolveOperator';  // 추가
 import type { OperatorData, BattleContext } from '../../types';  // BattleContext 타입 import
+import { shouldShowPercentByType, splitLeadingNote } from '../../utils/effectDisplay';
 
 interface PartyTabProps {
   partyMembers: OperatorData[];
@@ -410,10 +411,23 @@ export default function PartyTab({ partyMembers, onUpdate, onOpenModal, battleCo
                           <div className="flex flex-col gap-x-2">
                             {option.effects.map((effect, effIdx) => (
                               <span key={effIdx} className="text-[10px] text-zinc-500 font-bold">
-                                {effect.label}{" "}
-                                <span className="text-primary">
-                                  +{effect.values[member.temperaments[idx] - 1]}{effect.type.includes('ARTS_INTENSITY') ? '' : '%'}
-                                </span>
+                                {(() => {
+                                  const split = splitLeadingNote(effect.label);
+                                  const note = effect.note ?? split.note;
+                                  const value = effect.values[member.temperaments[idx] - 1];
+                                  const showPercent = shouldShowPercentByType(effect.type);
+                                  return (
+                                    <>
+                                      <span className="block">{split.label}{" "}
+                                        <span className="text-primary">+{value}{showPercent ? '%' : ''}</span>
+                                        
+                                      {note && (
+                                        <span className="px-2 text-[9px] font-medium text-zinc-500/80">({note})</span>
+                                      )}
+                                      </span>
+                                    </>
+                                  );
+                                })()}
                               </span>
                             ))}
                           </div>

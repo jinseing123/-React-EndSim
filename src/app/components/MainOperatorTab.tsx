@@ -7,6 +7,7 @@ import weaponsData from '../../data/weapons.json';
 import foodsData from '../../data/foods.json';
 import charactersData from '../../data/characters.json';
 import equipmentSetsData from '../../data/equipments/equipmentSets.json';
+import { shouldShowPercentByType, splitLeadingNote } from '../../utils/effectDisplay';
 
 interface OperatorData {
   characterId: string | null;
@@ -384,10 +385,23 @@ export default function MainOperatorTab({ operatorData, onUpdate, onOpenModal }:
                       <div className="flex flex-col gap-x-2">
                         {option.effects.map((effect, effIdx) => (
                           <span key={effIdx} className="text-[10px] text-zinc-500 font-bold">
-                            {effect.label}{" "}
-                            <span className="text-primary">
-                              +{effect.values[operatorData.temperaments[idx] - 1]}{effect.type.includes('ARTS_INTENSITY') ? '' : '%'}
-                            </span>
+                            {(() => {
+                              const split = splitLeadingNote(effect.label);
+                              const note = effect.note ?? split.note;
+                              const value = effect.values[operatorData.temperaments[idx] - 1];
+                              const showPercent = shouldShowPercentByType(effect.type);
+                              return (
+                                <>
+                                  <span className="block">{split.label}{" "}
+                                    <span className="text-primary">+{value}{showPercent ? '%' : ''}</span>
+
+                                    {note && (
+                                      <span className="px-2 text-[9px] font-medium text-zinc-500/80">({note})</span>
+                                    )}
+                                  </span>
+                                </>
+                              );
+                            })()}
                           </span>
                         ))}
                       </div>

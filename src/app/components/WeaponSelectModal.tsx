@@ -12,9 +12,9 @@ interface WeaponSelectModalProps {
 const WEAPON_TYPE_CATEGORIES: Record<string, string> = {
   'ONE_HAND_SWORD': '한손검',
   'TWO_HAND_SWORD': '양손검',
-  'DAGGER': '단검',
-  'BOW': '활',
-  'STAFF': '스태프',
+  'SPEAR': '장병기',
+  'PISTOL': '권총',
+  'ARTS_UNIT': '아츠 유닛',
   // 필요시 추가
 };
 

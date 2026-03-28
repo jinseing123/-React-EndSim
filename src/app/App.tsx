@@ -6,6 +6,7 @@ import CharacterSelectModal from './components/CharacterSelectModal';
 import EquipmentSelectModal from './components/EquipmentSelectModal';
 import WeaponSelectModal from './components/WeaponSelectModal';
 import FoodSelectModal from './components/FoodSelectModal';
+import { getIncomingEffectLabel } from '../utils/effectDisplay';
 
 import charactersData from '../data/characters.json';
 import type { OperatorData, BattleContext } from '../types';  // 타입 import
@@ -33,6 +34,9 @@ const STAT_LABEL_MAP: { type: string; label: string; isRaw?: boolean }[] = [
   { type: 'ELECTRIC_DMG', label: '전기 피해' },
   { type: 'NATURE_DMG', label: '자연 피해' },
   { type: 'ARTS_INTENSITY', label: '오리지늄 아츠 강도', isRaw: true },
+  { type: 'MAIN_STAT_PERCENT', label: '주요 능력치 증가' },
+  { type: 'SUB_STAT_PERCENT', label: '보조 능력치 증가' },
+  { type: 'ALL_STAT_PERCENT', label: '모든 능력치 증가' },
   { type: 'ARTS_AMP', label: '아츠 증폭' },
   { type: 'ARTS_VULN', label: '아츠 취약' },
   { type: 'ULTIMATE_CHARGE', label: '궁극기 충전 효율' },
@@ -263,7 +267,16 @@ export default function App() {
           </button>
         </div>
         <div className="p-3 space-y-1 overflow-y-auto flex-1">
-          {STAT_LABEL_MAP.filter(({ type }) => (mainTotals[type] ?? 0) !== 0).map(({ type, label, isRaw }) => {
+          {[
+            ...STAT_LABEL_MAP,
+            ...Object.keys(mainTotals)
+              .filter(type => type.startsWith('INCOMING_') && !STAT_LABEL_MAP.some(stat => stat.type === type))
+              .map(type => ({ type, label: getIncomingEffectLabel(type) })),
+          ]
+            .filter(({ type }) => (mainTotals[type] ?? 0) !== 0)
+            .map((stat) => {
+            const { type, label } = stat;
+            const isRaw = 'isRaw' in stat ? stat.isRaw : false;
             const val = mainTotals[type];
             const display = Number.isInteger(val) ? val : val.toFixed(1);
             return (
@@ -274,7 +287,7 @@ export default function App() {
                 </span>
               </div>
             );
-          })}
+            })}
           {STAT_LABEL_MAP.every(({ type }) => (mainTotals[type] ?? 0) === 0) && (
             <p className="text-[11px] text-zinc-600 text-center py-4">스탯 없음</p>
           )}

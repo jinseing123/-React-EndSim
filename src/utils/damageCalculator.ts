@@ -25,6 +25,24 @@ export function calculateDamage(
   totals: BuffTotals,
   context: BattleContext
 ): DamageResult {
+  const getIncomingDamageIncrease = (): number => {
+    let incoming = totals['INCOMING_ALL_DMG'] ?? 0;
+
+    if (skill.property === '물리') {
+      incoming += (totals['INCOMING_PHYSICAL_DMG'] ?? 0);
+      incoming += (totals['INCOMING_PHYSIC_DMG'] ?? 0); // 오타 대응
+      return incoming;
+    }
+
+    incoming += (totals['INCOMING_ARTS_DMG'] ?? 0);
+    if (skill.property === '열기') incoming += (totals['INCOMING_FIRE_DMG'] ?? 0);
+    if (skill.property === '전기') incoming += (totals['INCOMING_ELECTRIC_DMG'] ?? 0);
+    if (skill.property === '자연') incoming += (totals['INCOMING_NATURE_DMG'] ?? 0);
+    if (skill.property === '냉기') incoming += (totals['INCOMING_ICE_DMG'] ?? 0);
+
+    return incoming;
+  };
+
   // 1. 피해량 증가 버프 합산
   let dmgIncrease = 0;
   
@@ -77,6 +95,9 @@ export function calculateDamage(
 
   const artsAbnormalBuffMult = 1 + (shockBuff + corrosionBuff + armorBreakBuff) / 100;
 
+  // 2-1. 받는 피해 증가 버프: INCOMING_*끼리는 합산, 다른 그룹과는 곱연산
+  const incomingDamageMult = 1 + getIncomingDamageIncrease() / 100;
+
   // 3. 취약 버프 합산 (기존 취약 스탯만, 상태이상 제외)
   let vulnerability = 0;
   if (skill.property !== '물리') {
@@ -105,7 +126,7 @@ export function calculateDamage(
   // 5. 최종 데미지 계산
   // (1 * 2 * 3 * 4 * artsAbnormalBuff) * skill_value (%) * baseAtk
   let finalDamage = Math.round(
-    baseAtk * (skillValue / 100) * dmgIncreaseMult * vulnerabilityMult * amplificationMult * commonBuffMult * artsAbnormalBuffMult
+    baseAtk * (skillValue / 100) * dmgIncreaseMult * vulnerabilityMult * amplificationMult * commonBuffMult * artsAbnormalBuffMult * incomingDamageMult
   );
 
   // 5-1. 불균형 피해
